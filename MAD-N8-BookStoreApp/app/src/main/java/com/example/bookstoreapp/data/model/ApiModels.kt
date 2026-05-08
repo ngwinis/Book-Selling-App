@@ -132,7 +132,7 @@ data class CartItemResponse(
     @SerializedName("Book") val book: Book? = null
 ) {
     val bookId: Int get() = book?.bookId ?: idBook ?: 0
-    val bookTitle: String get() = book?.title ?: "Sách"
+    val bookTitle: String get() = book?.title ?: "Book"
     val bookPrice: Double get() = book?.price ?: 0.0
     val bookImage: String? get() = book?.primaryImageUrl
     val fullImageUrl: String get() = book?.primaryImageUrl ?: ""
@@ -182,7 +182,7 @@ data class PaymentItem(
     private val normalizedMethod: String
         get() = Normalizer.normalize(paymentMethod.lowercase(Locale.ROOT), Normalizer.Form.NFD)
             .replace("\\p{M}+".toRegex(), "")
-            .replace("đ", "d")
+            .replace("\u0111", "d")
 
     val isCashOnDelivery: Boolean
         get() = normalizedMethod.contains("cod")
@@ -194,13 +194,13 @@ data class PaymentItem(
         get() = isCashOnDelivery || isBankTransfer
 
     val displayStatus: String
-        get() = status ?: if (isSupportedInCheckout) "Hoạt động" else "Chưa hỗ trợ"
+        get() = status ?: if (isSupportedInCheckout) "Active" else "Unsupported"
 
     val checkoutHint: String
         get() = when {
-            isCashOnDelivery -> "Đơn sẽ chuyển sang Đang xử lý ngay sau khi đặt hàng."
-            isBankTransfer -> "Đơn sẽ ở Chờ thanh toán cho đến khi bạn xác nhận đã chuyển khoản."
-            else -> "Phương thức này chưa được hỗ trợ hoàn tất trong ứng dụng."
+            isCashOnDelivery -> "The order will move to Processing after it is placed."
+            isBankTransfer -> "The order will stay in Pending payment until you confirm the bank transfer."
+            else -> "This payment method is not supported for in-app completion."
         }
 }
 

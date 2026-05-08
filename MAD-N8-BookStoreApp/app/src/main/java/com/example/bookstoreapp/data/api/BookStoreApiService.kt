@@ -10,13 +10,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import java.util.concurrent.TimeUnit
 
-// ===== Token Manager (Lưu JWT trong memory) =====
+// ===== Token Manager (Store JWT in memory) =====
 object TokenManager {
     var token: String? = null
     var customerId: Int = -1
 }
 
-// ===== Auth Interceptor (Tự gắn Bearer Token vào mọi request) =====
+// ===== Auth Interceptor (Attach Bearer token to every request) =====
 class AuthInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
         val original = chain.request()
@@ -28,7 +28,7 @@ class AuthInterceptor : Interceptor {
     }
 }
 
-// ===== API Interface — Đầy đủ 38 Endpoint =====
+// ===== API Interface — Full 38 endpoints =====
 interface BookStoreApiService {
 
     // ---- AUTH (1-5) ----
@@ -178,9 +178,9 @@ interface BookStoreApiService {
 // ===== Retrofit Client Singleton =====
 object RetrofitClient {
     val BASE_URL = if (android.os.Build.FINGERPRINT.contains("generic") || android.os.Build.MODEL.contains("Emulator") || android.os.Build.PRODUCT.contains("sdk")) {
-        "http://10.0.2.2:3000" // IP dành cho Android Emulator
+        "http://10.0.2.2:3000" // IP address for Android Emulator
     } else {
-        "http://127.0.0.1:3000" // IP dành cho thiết bị thật (yêu cầu adb reverse)
+        "http://127.0.0.1:3000" // IP address for real devices; requires adb reverse
     }
 
     private val okHttpClient: OkHttpClient by lazy {

@@ -3,7 +3,7 @@ const supabase = require('../config/supabase');
 const qs = require('qs');
 
 const vnpayController = {
-  // --- HÀM HỖ TRỢ KÝ CHỮ KÝ (HMAC-SHA512) ---
+  // --- HMAC-SHA512 signing helper ---
   signParams: (params) => {
     const secret = (process.env.VNP_HASHSECRET || '').trim();
     const sorted = {};
@@ -18,8 +18,8 @@ const vnpayController = {
     return hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
   },
 
-  // 1. Tạo URL thanh toán (Dùng cho Checkout/BuyNow) - Dùng CamelCase theo chuẩn vpcpay.html
-  createUrl: async (orderId, amount, ipAddr, orderInfo = 'Thanh toan don hang Bookstore') => {
+  // 1. Create payment URL for checkout/buy-now using CamelCase for vpcpay.html
+  createUrl: async (orderId, amount, ipAddr, orderInfo = 'Bookstore order payment') => {
     const tmnCode = (process.env.VNP_TMNCODE || '').trim();
     const returnUrl = (process.env.VNP_RETURNURL || '').trim();
     const date = new Date();
@@ -56,60 +56,60 @@ const vnpayController = {
     return baseUrl + '?' + signData + '&vnp_SecureHash=' + secureHash;
   },
 
-  // 2. Xử lý Return URL
+  // 2. Handle return URL
   vnpayReturn: async (req, res) => {
     try {
       const vnp_Params = req.query;
-      // Hỗ trợ cả vnp_SecureHash và vnp_secure_hash
+      // Support both vnp_SecureHash and vnp_secure_hash
       const secureHash = vnp_Params['vnp_SecureHash'] || vnp_Params['vnp_secure_hash'];
       const checkHash = vnpayController.signParams(vnp_Params);
 
-      // So sánh không phân biệt hoa thường để đảm bảo tính tương thích
+      // Compare case-insensitively for compatibility
       if (secureHash && checkHash && secureHash.toLowerCase() === checkHash.toLowerCase()) {
         if (vnp_Params['vnp_ResponseCode'] === '00' || vnp_Params['vnp_response_code'] === '00' || vnp_Params['vnp_Token'] || vnp_Params['vnp_token']) {
            
-           // --- TRƯỜNG HỢP 1: TRẢ VỀ TỪ LUỒNG LƯU THẺ (TOKENIZATION) ---
+           // --- Case 1: return from tokenization flow ---
            const token = vnp_Params['vnp_Token'] || vnp_Params['vnp_token'];
            if (token) {
               const appUserId = vnp_Params['vnp_AppUserId'] || vnp_Params['vnp_app_user_id'];
               const cardType = vnp_Params['vnp_card_type'] || vnp_Params['vnp_CardType'] || 'ATM';
               const maskedCard = vnp_Params['vnp_CardNumber'] || vnp_Params['vnp_card_number'] || '****';
 
-              // Kiểm tra xem thẻ này đã lưu chưa để tránh trùng lặp khi cả IPN và Return cùng chạy
+              // Check whether the card is already saved to avoid duplicates when both IPN and return run
               const { data: existing } = await supabase.from('Payment').select('id').eq('vnpToken', token).single();
               
               if (!existing && appUserId) {
                 await supabase.from('Payment').insert([{
                     idCustomer: appUserId,
-                    paymentMethod: `Thẻ VNPay (${cardType})`,
+                    paymentMethod: `VNPay Card (${cardType})`,
                     vnpToken: token,
                     maskedCardNumber: maskedCard,
                     vnpCardType: cardType,
-                    status: 'Hoạt động'
+                    status: 'Active'
                 }]);
-                console.log(`[VNPay] Đã lưu thẻ thành công từ Return URL cho Khách hàng #${appUserId}`);
+                console.log(`[VNPay] Saved card successfully from return URL for customer #${appUserId}`);
               }
 
               return res.status(200).send(`
                <html>
                  <head>
-                   <title>Thành công</title>
+                   <title>Success</title>
                    <meta name="viewport" content="width=device-width, initial-scale=1">
                  </head>
                  <body style="text-align:center; padding-top:100px; font-family:sans-serif; background:#f4f7f6;">
                    <div style="background:white; max-width:400px; margin:0 auto; padding:30px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.1);">
                     <h1 style="color:#2ecc71; font-size:60px; margin:0;">💳</h1>
-                    <h2 style="color:#2c3e50;">Liên kết thẻ thành công!</h2>
-                    <p style="color:#7f8c8d;">Thẻ của bạn đã được lưu an toàn vào hệ thống Bookstore.</p>
+                    <h2 style="color:#2c3e50;">Card linked successfully!</h2>
+                    <p style="color:#7f8c8d;">Your card has been saved safely in the Bookstore system.</p>
                     <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
-                    <p style="font-weight:bold; color:#34495e;">Vui lòng quay lại ứng dụng để tiếp tục.</p>
+                    <p style="font-weight:bold; color:#34495e;">Please return to the app to continue.</p>
                    </div>
                  </body>
                </html>
              `);
            }
 
-           // --- TRƯỜNG HỢP 2: THANH TOÁN ĐƠN HÀNG ---
+           // --- Case 2: order payment ---
            const orderId = vnp_Params['vnp_TxnRef'] || vnp_Params['vnp_txn_ref'];
            if (orderId) {
              const { data: order } = await supabase
@@ -118,11 +118,11 @@ const vnpayController = {
                .eq('orderID', orderId)
                .single();
 
-             if (order && order.status === 'Chờ thanh toán') {
+             if (order && order.status === 'Pending payment') {
                await supabase
                  .from('Order')
                  .update({
-                   status: 'Hoàn tất',
+                   status: 'Completed',
                    vnpTransactionNo: vnp_Params['vnp_TransactionNo'] || vnp_Params['vnp_transaction_no'],
                    vnpResponseCode: vnp_Params['vnp_ResponseCode'] || vnp_Params['vnp_response_code'],
                  })
@@ -133,21 +133,21 @@ const vnpayController = {
            return res.status(200).send(`
              <html>
                <body style="text-align:center; padding-top:100px; font-family:sans-serif;">
-                 <h1 style="color:#2ecc71;">✅ Giao dịch thành công!</h1>
-                 <p>Mã đơn hàng: ${vnp_Params['vnp_TxnRef'] || vnp_Params['vnp_txn_ref']}</p>
-                 <p>Bạn có thể quay lại ứng dụng.</p>
+                 <h1 style="color:#2ecc71;">✅ Transaction successful!</h1>
+                 <p>Order ID: ${vnp_Params['vnp_TxnRef'] || vnp_Params['vnp_txn_ref']}</p>
+                 <p>You can return to the app.</p>
                </body>
              </html>
            `);
         }
       }
-      res.status(200).send(`<html><body style="text-align:center; padding-top:50px;"><h1>❌ Giao dịch thất bại</h1><p>Mã lỗi: ${vnp_Params['vnp_ResponseCode'] || vnp_Params['vnp_response_code']}</p></body></html>`);
+      res.status(200).send(`<html><body style="text-align:center; padding-top:50px;"><h1>❌ Transaction failed</h1><p>Error code: ${vnp_Params['vnp_ResponseCode'] || vnp_Params['vnp_response_code']}</p></body></html>`);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
 
-  // 3. Xử lý IPN
+  // 3. Handle IPN
   vnpayIpn: async (req, res) => {
     try {
       const vnp_Params = req.query;
@@ -166,11 +166,11 @@ const vnpayController = {
         if (responseCode === '00') {
            await supabase.from('Payment').insert([{
               idCustomer: appUserId,
-              paymentMethod: `Thẻ VNPay (${vnp_Params['vnp_card_type'] || vnp_Params['vnp_CardType'] || 'ATM'})`,
+              paymentMethod: `VNPay Card (${vnp_Params['vnp_card_type'] || vnp_Params['vnp_CardType'] || 'ATM'})`,
               vnpToken: token,
               maskedCardNumber: vnp_Params['vnp_CardNumber'] || vnp_Params['vnp_card_number'] || '****',
               vnpCardType: vnp_Params['vnp_CardType'] || vnp_Params['vnp_card_type'] || 'ATM',
-              status: 'Hoạt động'
+              status: 'Active'
            }]);
         }
         return res.status(200).json({ RspCode: '00', Message: 'Token confirmed' });
@@ -181,11 +181,11 @@ const vnpayController = {
       const { data: order } = await supabase.from('Order').select('*').eq('orderID', orderId).single();
       
       if (!order) return res.status(200).json({ RspCode: '01', Message: 'Order not found' });
-      if (order.status !== 'Chờ thanh toán') return res.status(200).json({ RspCode: '02', Message: 'Order already confirmed' });
+      if (order.status !== 'Pending payment') return res.status(200).json({ RspCode: '02', Message: 'Order already confirmed' });
 
-      const newStatus = (responseCode === '00') ? 'Đang xử lý' : 'Đã hủy';
+      const newStatus = (responseCode === '00') ? 'Processing' : 'Canceled';
       await supabase.from('Order').update({ 
-        status: responseCode === '00' ? 'Hoàn tất' : 'Đã hủy',
+        status: responseCode === '00' ? 'Completed' : 'Canceled',
         vnpTransactionNo: vnp_Params['vnp_TransactionNo'] || vnp_Params['vnp_transaction_no'],
         vnpResponseCode: responseCode
       }).eq('orderID', orderId);
@@ -215,7 +215,7 @@ const vnpayController = {
      });
   },
 
-  // 5. Tạo URL liên kết thẻ (Tokenization) - DÙNG SNAKE_CASE
+  // 5. Create card-link URL using snake_case
   createTokenUrl: async (customerId, ipAddr, cardType = '01') => {
     const tmnCode = (process.env.VNP_TMNCODE || '').trim();
     const returnUrl = (process.env.VNP_RETURNURL || '').trim();
@@ -227,15 +227,15 @@ const vnpayController = {
                        date.getMinutes().toString().padStart(2, '0') +
                        date.getSeconds().toString().padStart(2, '0');
 
-    // SỬ DỤNG SNAKE_CASE HOÀN TOÀN CHO ENDPOINT CREATE-TOKEN.HTML
+    // Use snake_case for create-token.html
     const params = {
         vnp_version: '2.1.0',
         vnp_command: 'token_create',
         vnp_tmn_code: tmnCode,
         vnp_app_user_id: customerId.toString(),
         vnp_txn_ref: `TK${customerId}X${Math.floor(Date.now() / 1000)}`,
-        vnp_txn_desc: `LuuTheBK${customerId}`, 
-        vnp_card_type: cardType, // 01: Nội địa, 02: Quốc tế
+        vnp_txn_desc: `SaveCardBK${customerId}`, 
+        vnp_card_type: cardType, // 01: Domestic, 02: International
         vnp_return_url: returnUrl,
         vnp_ip_addr: ipAddr || '127.0.0.1',
         vnp_create_date: createDate,
@@ -245,14 +245,14 @@ const vnpayController = {
     const secureHash = vnpayController.signParams(params);
     const baseUrl = 'https://sandbox.vnpayment.vn/token_ui/create-token.html';
     
-    // Đảm bảo URL cũng được sắp xếp đúng thứ tự
+    // Ensure URL parameters are sorted correctly
     const sorted = {};
     Object.keys(params).sort().forEach(key => sorted[key] = params[key]);
 
     return baseUrl + '?' + qs.stringify(sorted, { encode: true }) + '&vnp_secure_hash=' + secureHash;
   },
 
-  // 6. Tạo URL thanh toán bằng Token đã lưu (Frictionless / 3DS) - DÙNG SNAKE_CASE THEO CHUẨN TOKEN_UI
+  // 6. Create payment URL with saved token using token_ui snake_case
   createTokenPayUrl: async (orderId, amount, customerId, token, ipAddr) => {
     const tmnCode = (process.env.VNP_TMNCODE || '').trim();
     const returnUrl = (process.env.VNP_RETURNURL || '').trim();
@@ -264,7 +264,7 @@ const vnpayController = {
                        date.getMinutes().toString().padStart(2, '0') +
                        date.getSeconds().toString().padStart(2, '0');
 
-    // SỬ DỤNG CHỮ THƯỜNG (SNAKE_CASE) VÀ KHÔNG KHOẢNG TRẮNG ĐỂ TRÁNH LỖI MÃ HÓA
+    // Use lowercase snake_case and no spaces to avoid encoding issues
     const params = {
         vnp_version: '2.1.0',
         vnp_command: 'token_pay',
@@ -275,7 +275,7 @@ const vnpayController = {
         vnp_curr_code: 'VND',
         vnp_ip_addr: ipAddr || '127.0.0.1',
         vnp_locale: 'vn',
-        vnp_txn_desc: `ThanhToanDonHang${orderId}`, // Bỏ khoảng trắng để an toàn nhất
+        vnp_txn_desc: `PayOrder${orderId}`, // Remove spaces for safest encoding
         vnp_return_url: returnUrl,
         vnp_token: token, 
         vnp_txn_ref: orderId.toString(),

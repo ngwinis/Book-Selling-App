@@ -74,16 +74,16 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel = view
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column {
-                            Text("Tổng", style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
+                            Text("Total", style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
                             Text(
                                 format.format(cartViewModel.selectedTotalPrice * 100000),
                                 style = MaterialTheme.typography.titleLarge
                             )
                             Text(
                                 text = if (cartViewModel.hasSelectedItems) {
-                                    "Sẵn sàng thanh toán"
+                                    "Ready to checkout"
                                 } else {
-                                    "Chọn sản phẩm để bật thanh toán"
+                                    "Select products to enable checkout"
                                 },
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Color.Gray
@@ -98,7 +98,7 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel = view
                             ),
                             modifier = Modifier.alpha(if (cartViewModel.hasSelectedItems) 1f else 0.75f)
                         ) {
-                            Text("Thanh toán")
+                            Text("Checkout")
                         }
                     }
                 }
@@ -112,7 +112,7 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel = view
                 .padding(horizontal = 16.dp)
         ) {
             Text(
-                "Giỏ hàng của bạn",
+                "Your Cart",
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(top = 16.dp)
             )
@@ -134,7 +134,7 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel = view
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("Giỏ hàng trống", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text("Your cart is empty", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             } else {
                 LazyColumn(
@@ -206,7 +206,7 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel = view
                                 IconButton(onClick = { cartViewModel.deleteItem(item.cartItemId) }) {
                                     Icon(
                                         Icons.Outlined.Delete,
-                                        contentDescription = "Xóa",
+                                        contentDescription = "Delete",
                                         tint = MaterialTheme.colorScheme.error
                                     )
                                 }
@@ -234,9 +234,9 @@ fun CheckoutScreen(
         selectedPayment.isSupportedInCheckout &&
         orderViewModel.selectedShipment != null
     val checkoutLabel = when {
-        selectedPayment?.isCashOnDelivery == true -> "Xác nhận đơn COD"
-        selectedPayment?.isBankTransfer == true -> "Tạo đơn chờ thanh toán"
-        else -> "Xác nhận đặt hàng"
+        selectedPayment?.isCashOnDelivery == true -> "Confirm COD Order"
+        selectedPayment?.isBankTransfer == true -> "Create Pending Payment Order"
+        else -> "Confirm Order"
     }
 
     LaunchedEffect(Unit) {
@@ -244,7 +244,7 @@ fun CheckoutScreen(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        MainTopAppBar("Thanh toán", navController)
+        MainTopAppBar("Checkout", navController)
         Column(
             modifier = Modifier
                 .padding(16.dp)
@@ -259,10 +259,10 @@ fun CheckoutScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("Địa chỉ giao hàng", fontWeight = FontWeight.Bold)
+                        Text("Shipping Address", fontWeight = FontWeight.Bold)
                         Text(
                             orderViewModel.selectedAddress?.let { "${it.receiverName} - ${it.addressString}" }
-                                ?: "Chọn địa chỉ",
+                                ?: "Select Address",
                             color = Color.Gray,
                             maxLines = 1
                         )
@@ -279,9 +279,9 @@ fun CheckoutScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("Phương thức thanh toán", fontWeight = FontWeight.Bold)
+                        Text("Payment Method", fontWeight = FontWeight.Bold)
                         Text(
-                            orderViewModel.selectedPayment?.paymentMethod ?: "Chọn phương thức",
+                            orderViewModel.selectedPayment?.paymentMethod ?: "Select Method",
                             color = Color.Gray,
                             maxLines = 1
                         )
@@ -303,9 +303,9 @@ fun CheckoutScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("Đơn vị vận chuyển", fontWeight = FontWeight.Bold)
+                        Text("Shipping Method", fontWeight = FontWeight.Bold)
                         Text(
-                            orderViewModel.selectedShipment?.shipmentMethod ?: "Chọn đơn vị",
+                            orderViewModel.selectedShipment?.shipmentMethod ?: "Select Carrier",
                             color = Color.Gray,
                             maxLines = 1
                         )
@@ -326,9 +326,9 @@ fun CheckoutScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("Khuyến mãi / Voucher", fontWeight = FontWeight.Bold)
+                        Text("Promotion / Voucher", fontWeight = FontWeight.Bold)
                         Text(
-                            orderViewModel.selectedVoucher?.description ?: "Chọn voucher",
+                            orderViewModel.selectedVoucher?.description ?: "Select Voucher",
                             color = Color(0xFF2E7D32),
                             maxLines = 1
                         )
@@ -339,7 +339,7 @@ fun CheckoutScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
             Text(
-                "Đang chọn ${cartViewModel.selectedCartItemIds.size} sản phẩm",
+                "Selected ${cartViewModel.selectedCartItemIds.size} products",
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.Gray
             )
@@ -359,7 +359,7 @@ fun CheckoutScreen(
                         cartViewModel.clearSelection()
                         Toast.makeText(
                             context,
-                            result.message ?: "Đặt hàng thành công",
+                            result.message ?: "Order placed successfully",
                             Toast.LENGTH_SHORT
                         ).show()
                         navController.navigate(Screen.OrderHistory.route)
@@ -393,7 +393,7 @@ fun AddressSelectionScreen(
     LaunchedEffect(Unit) { profileViewModel.loadAddresses() }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        MainTopAppBar("Chọn địa chỉ giao hàng", navController)
+        MainTopAppBar("Select Shipping Address", navController)
         Column(
             modifier = Modifier
                 .padding(16.dp)
@@ -401,7 +401,7 @@ fun AddressSelectionScreen(
         ) {
             if (profileViewModel.addresses.isEmpty()) {
                 Box(modifier = Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
-                    Text("Chưa có địa chỉ nào", color = Color.Gray)
+                    Text("No addresses yet", color = Color.Gray)
                 }
             } else {
                 profileViewModel.addresses.forEach { addr ->
@@ -437,7 +437,7 @@ fun AddressSelectionScreen(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Text("+ Thêm địa chỉ mới")
+            Text("+ Add New Address")
         }
     }
 }
@@ -452,21 +452,21 @@ fun PaymentSelectionScreen(
     LaunchedEffect(Unit) { profileViewModel.loadPayments() }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        MainTopAppBar("Chọn phương thức thanh toán", navController)
+        MainTopAppBar("Select Payment Method", navController)
         Column(
             modifier = Modifier
                 .padding(16.dp)
                 .weight(1f)
         ) {
             Text(
-                "App hiện chỉ hoàn tất COD và chuyển khoản ngân hàng.",
+                "The app currently completes only COD and bank transfer payments.",
                 color = Color.Gray,
                 style = MaterialTheme.typography.bodyMedium
             )
             Spacer(modifier = Modifier.height(12.dp))
             if (profileViewModel.payments.isEmpty()) {
                 Box(modifier = Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
-                    Text("Chưa có phương thức nào", color = Color.Gray)
+                    Text("No payment methods yet", color = Color.Gray)
                 }
             } else {
                 profileViewModel.payments.forEach { payment ->
@@ -483,7 +483,7 @@ fun PaymentSelectionScreen(
                             } else {
                                 Toast.makeText(
                                     context,
-                                    "Phương thức này chưa được hỗ trợ thanh toán trong app",
+                                    "This payment method is not supported in the app",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
@@ -526,7 +526,7 @@ fun PaymentSelectionScreen(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Text("+ Thêm phương thức mới")
+            Text("+ Add New Payment Method")
         }
     }
 }
@@ -536,7 +536,7 @@ private fun PaymentSupportCard(payment: PaymentItem) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                if (payment.isSupportedInCheckout) "Hướng dẫn thanh toán" else "Trạng thái phương thức",
+                if (payment.isSupportedInCheckout) "Payment Instructions" else "Method Status",
                 style = MaterialTheme.typography.titleMedium
             )
             Spacer(modifier = Modifier.height(6.dp))
@@ -550,11 +550,11 @@ private fun PaymentSupportCard(payment: PaymentItem) {
                 Spacer(modifier = Modifier.height(12.dp))
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(12.dp))
-                Text("Ngân hàng: Vietcombank", style = MaterialTheme.typography.bodyMedium)
-                Text("Số tài khoản: 0123456789", style = MaterialTheme.typography.bodyMedium)
-                Text("Chủ tài khoản: MAD N8 BookStore", style = MaterialTheme.typography.bodyMedium)
+                Text("Bank: Vietcombank", style = MaterialTheme.typography.bodyMedium)
+                Text("Account number: 0123456789", style = MaterialTheme.typography.bodyMedium)
+                Text("Account holder: MAD N8 BookStore", style = MaterialTheme.typography.bodyMedium)
                 Text(
-                    "Sau khi chuyển khoản, mở chi tiết đơn hàng và nhấn 'Xác nhận đã chuyển khoản'.",
+                    "After transferring, open order details and tap 'Confirm Bank Transfer'.",
                     color = Color.Gray,
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(top = 8.dp)

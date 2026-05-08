@@ -126,12 +126,12 @@ fun AppNavigation(
             arguments = listOf(
                 navArgument("categoryId") { type = NavType.IntType; defaultValue = -1 },
                 navArgument("authorId") { type = NavType.IntType; defaultValue = -1 },
-                navArgument("title") { type = NavType.StringType; defaultValue = "Tất cả sản phẩm" }
+                navArgument("title") { type = NavType.StringType; defaultValue = "All Products" }
             )
         ) { backStackEntry ->
             val catId = backStackEntry.arguments?.getInt("categoryId")?.let { if (it == -1) null else it }
             val authId = backStackEntry.arguments?.getInt("authorId")?.let { if (it == -1) null else it }
-            val title = backStackEntry.arguments?.getString("title") ?: "Tất cả sản phẩm"
+            val title = backStackEntry.arguments?.getString("title") ?: "All Products"
             ProductListScreen(navController, categoryId = catId, authorId = authId, title = title, bookViewModel = bookViewModel)
         }
 

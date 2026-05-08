@@ -17,7 +17,7 @@ fun CategoryListScreen(navController: NavController, bookViewModel: BookViewMode
     LaunchedEffect(Unit) { bookViewModel.loadCategories() }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        MainTopAppBar(title = "Tất cả danh mục", navController = navController)
+        MainTopAppBar(title = "All Categories", navController = navController)
         LazyColumn(modifier = Modifier.padding(16.dp)) {
             items(bookViewModel.categories) { category ->
                 Card(

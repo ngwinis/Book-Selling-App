@@ -31,10 +31,10 @@ data class BottomNavItem(
 @Composable
 fun BottomNavBar(navController: NavController) {
     val items = listOf(
-        BottomNavItem("Trang chủ", Screen.Home.route, Icons.Filled.Home, Icons.Outlined.Home),
-        BottomNavItem("Giỏ hàng", Screen.Cart.route, Icons.Filled.ShoppingCart, Icons.Outlined.ShoppingCart),
+        BottomNavItem("Home", Screen.Home.route, Icons.Filled.Home, Icons.Outlined.Home),
+        BottomNavItem("Cart", Screen.Cart.route, Icons.Filled.ShoppingCart, Icons.Outlined.ShoppingCart),
         BottomNavItem("Chatbot", Screen.Chatbot.route, Icons.Filled.List, Icons.Outlined.Chat),
-        BottomNavItem("Cá nhân", Screen.Profile.route, Icons.Filled.Person, Icons.Outlined.Person)
+        BottomNavItem("Profile", Screen.Profile.route, Icons.Filled.Person, Icons.Outlined.Person)
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()

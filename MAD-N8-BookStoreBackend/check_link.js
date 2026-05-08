@@ -29,7 +29,7 @@ async function runTest() {
       vnp_CreateDate: createDate, 
       vnp_IpAddr: ipAddr || '127.0.0.1',
       vnp_TxnRef: `TK${customerId}X${Math.floor(Date.now() / 1000)}`, 
-      vnp_OrderInfo: `LuuTheBookstore${customerId}`, 
+      vnp_OrderInfo: `SaveCardBookstore${customerId}`, 
       vnp_OrderType: 'other',
       vnp_ReturnUrl: process.env.VNP_RETURNURL,
       vnp_AppUserId: customerId.toString(),

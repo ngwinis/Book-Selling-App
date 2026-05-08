@@ -30,7 +30,7 @@ fun MainTopAppBar(
                     }
                 }
             }) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "Trở về")
+                Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(

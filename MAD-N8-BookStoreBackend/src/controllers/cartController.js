@@ -51,7 +51,7 @@ const cartController = {
 
     try {
       if (!customerId || customerId <= 0) {
-        return res.status(400).json({ message: 'Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng' });
+        return res.status(400).json({ message: 'Please log in to add items to the cart' });
       }
 
       const cart = await getOrCreateCart(customerId);
@@ -71,45 +71,45 @@ const cartController = {
           .eq('cartItemID', existingItem.cartItemID)
           .select();
         if (error) throw error;
-        res.status(200).json({ message: "Đã cập nhật số lượng sách trong giỏ!", data });
+        res.status(200).json({ message: "Cart quantity updated!", data });
       } else {
         const { data, error } = await supabase.from('CartItem').insert([{ idCart: cart.cartID, idBook: bookId, quantity }]).select();
         if (error) throw error;
-        res.status(201).json({ message: "Đã thêm sách mới vào giỏ!", data });
+        res.status(201).json({ message: "New book added to cart!", data });
       }
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
 
-  // Cập nhật số lượng (Tăng/giảm/Set trực tiếp) của 1 ô giỏ hàng
+  // Update quantity for one cart row
   updateCartItemQuantity: async (req, res) => {
     const { cartItemId } = req.params;
     const { quantity } = req.body;
 
     try {
       if (quantity <= 0) {
-        // Nếu quantity <= 0, coi như là xoá
+        // Treat quantity <= 0 as delete
         const { error } = await supabase.from('CartItem').delete().eq('cartItemID', cartItemId);
         if (error) throw error;
-        return res.status(200).json({ message: "Đã xóa sản phẩm khỏi giỏ hàng." });
+        return res.status(200).json({ message: "Product removed from cart." });
       }
 
       const { data, error } = await supabase.from('CartItem').update({ quantity }).eq('cartItemID', cartItemId).select();
       if (error) throw error;
-      res.status(200).json({ message: "Đã cập nhật số lượng", data });
+      res.status(200).json({ message: "Quantity updated", data });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
 
-  // Xóa thủ công 1 ô giỏ hàng
+  // Manually remove one cart row
   removeCartItem: async (req, res) => {
     const { cartItemId } = req.params;
     try {
       const { error } = await supabase.from('CartItem').delete().eq('cartItemID', cartItemId);
       if (error) throw error;
-      res.status(200).json({ message: "Đã xóa sản phẩm khỏi giỏ hàng." });
+      res.status(200).json({ message: "Product removed from cart." });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

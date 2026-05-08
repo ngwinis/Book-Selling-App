@@ -50,9 +50,9 @@ fun VoiceSearchDialog(
     var recordingTime by remember { mutableStateOf(0) }
     var audioFile by remember { mutableStateOf<File?>(null) }
     var recorder by remember { mutableStateOf<MediaRecorder?>(null) }
-    var statusText by remember { mutableStateOf("Đang lắng nghe...") }
+    var statusText by remember { mutableStateOf("Listening...") }
 
-    // Hiệu ứng nhịp đập cho nút
+    // Pulse effect for the button
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
     val pulseScale by infiniteTransition.animateFloat(
         initialValue = 1f,
@@ -64,7 +64,7 @@ fun VoiceSearchDialog(
         label = "pulse"
     )
 
-    // Hiệu ứng Sóng âm (Visualizer)
+    // Audio wave visualizer effect
     val waveAnimations = List(8) { 
         infiniteTransition.animateFloat(
             initialValue = 0.2f,
@@ -100,11 +100,11 @@ fun VoiceSearchDialog(
             }
             recorder = newRecorder
             isRecording = true
-            statusText = "Đang lắng nghe..."
-            Log.d("VoiceSearch", "Bắt đầu ghi âm: ${file.absolutePath}")
+            statusText = "Listening..."
+            Log.d("VoiceSearch", "Start recording: ${file.absolutePath}")
         } catch (e: Exception) {
-            Log.e("VoiceSearch", "Lỗi khởi tạo", e)
-            statusText = "Lỗi âm thanh"
+            Log.e("VoiceSearch", "Initialization error", e)
+            statusText = "Audio error"
         }
     }
 
@@ -130,23 +130,23 @@ fun VoiceSearchDialog(
             }
             recorder = null
             isRecording = false
-            Log.d("VoiceSearch", "Dừng và gửi đi ngay")
+            Log.d("VoiceSearch", "Stop and send immediately")
             sendAudioAndClose()
         } catch (e: Exception) {
-            Log.e("VoiceSearch", "Lỗi dừng ghi", e)
+            Log.e("VoiceSearch", "Stop recording error", e)
             isRecording = false
             onDismiss()
         }
     }
 
-    // Tự động khởi động khi mở Pop-up
+    // Start automatically when the popup opens
     LaunchedEffect(recordAudioPermissionState.status.isGranted) {
         if (recordAudioPermissionState.status.isGranted) {
             startRecording()
         }
     }
 
-    // Đếm thời gian
+    // Count elapsed time
     LaunchedEffect(isRecording) {
         if (isRecording) {
             recordingTime = 0
@@ -175,11 +175,11 @@ fun VoiceSearchDialog(
                 modifier = Modifier.padding(24.dp).fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Tìm kiếm bằng giọng nói", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                Text("Voice Search", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                 
                 Spacer(modifier = Modifier.height(24.dp))
                 
-                // Visualizer Sóng âm
+                // Audio Wave Visualizer
                 if (isRecording) {
                     Canvas(modifier = Modifier.fillMaxWidth().height(60.dp)) {
                         val barWidth = 8.dp.toPx()
@@ -208,7 +208,7 @@ fun VoiceSearchDialog(
 
                 if (!recordAudioPermissionState.status.isGranted) {
                     Button(onClick = { recordAudioPermissionState.launchPermissionRequest() }) {
-                        Text("Cấp quyền Micro")
+                        Text("Grant Microphone Permission")
                     }
                 } else {
                     Box(
@@ -247,7 +247,7 @@ fun VoiceSearchDialog(
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = Color.Gray)
                 ) {
-                    Text("Hủy tìm kiếm")
+                    Text("Cancel Search")
                 }
             }
         }

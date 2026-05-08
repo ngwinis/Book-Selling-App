@@ -51,7 +51,7 @@ class OrderViewModel : ViewModel() {
             try {
                 val response = api.validateVoucher(ValidateVoucherRequest(code, totalAmount))
                 if (response.isSuccessful) validateResult = response.body()
-                else validateResult = ValidateVoucherResponse(false, message = "Mã không hợp lệ")
+                else validateResult = ValidateVoucherResponse(false, message = "Invalid code")
             } catch (_: Exception) {}
         }
     }
@@ -81,7 +81,7 @@ class OrderViewModel : ViewModel() {
                     lastPaymentUrl = checkoutResult?.paymentUrl
                     onSuccess(checkoutResult!!)
                 } else {
-                    message = "Đặt hàng thất bại"
+                    message = "Order placement failed"
                 }
             } catch (e: Exception) {
                 message = e.message
@@ -109,7 +109,7 @@ class OrderViewModel : ViewModel() {
                     lastPaymentUrl = checkoutResult?.paymentUrl
                     onSuccess(checkoutResult!!)
                 } else {
-                    message = "Mua hàng thất bại"
+                    message = "Buy-now failed"
                 }
             } catch (e: Exception) {
                 message = e.message
@@ -147,7 +147,7 @@ class OrderViewModel : ViewModel() {
                     loadOrders()
                     onDone()
                 } else {
-                    message = "Không thể hủy đơn hàng này"
+                    message = "This order cannot be canceled"
                 }
             } catch (e: Exception) {
                 message = e.message
@@ -173,7 +173,7 @@ class OrderViewModel : ViewModel() {
                     loadOrders()
                     onDone(body)
                 } else {
-                    message = "Không thể xác nhận thanh toán cho đơn hàng này"
+                    message = "Payment cannot be confirmed for this order"
                     onDone(null)
                 }
             } catch (e: Exception) {

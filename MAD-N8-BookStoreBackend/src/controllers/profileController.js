@@ -1,12 +1,12 @@
 const supabase = require('../config/supabase');
 
 const DEFAULT_PAYMENT_METHODS = [
-  { paymentMethod: 'Thanh toán khi nhận hàng (COD)', status: 'Hoạt động' },
-  { paymentMethod: 'Chuyển khoản ngân hàng', status: 'Hoạt động' },
-  { paymentMethod: 'Ví Momo', status: 'Chưa hỗ trợ' },
-  { paymentMethod: 'ZaloPay', status: 'Chưa hỗ trợ' },
-  { paymentMethod: 'VNPay', status: 'Chưa hỗ trợ' },
-  { paymentMethod: 'Thẻ ghi nợ / tín dụng', status: 'Chưa hỗ trợ' },
+  { paymentMethod: 'Cash on Delivery (COD)', status: 'Active' },
+  { paymentMethod: 'Bank transfer', status: 'Active' },
+  { paymentMethod: 'Momo wallet', status: 'Unsupported' },
+  { paymentMethod: 'ZaloPay', status: 'Unsupported' },
+  { paymentMethod: 'VNPay', status: 'Unsupported' },
+  { paymentMethod: 'Debit / credit card', status: 'Unsupported' },
 ];
 
 const normalizeText = (value = '') =>
@@ -14,8 +14,8 @@ const normalizeText = (value = '') =>
     .toString()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/g, 'd')
-    .replace(/Đ/g, 'D')
+    .replace(/\u0111/g, 'd')
+    .replace(/\u0110/g, 'D')
     .trim()
     .toUpperCase();
 
@@ -27,7 +27,7 @@ const isSupportedPaymentMethod = (paymentMethod = '') => {
 };
 
 const resolvePaymentStatus = (paymentMethod = '') => (
-  isSupportedPaymentMethod(paymentMethod) ? 'Hoạt động' : 'Chưa hỗ trợ'
+  isSupportedPaymentMethod(paymentMethod) ? 'Active' : 'Unsupported'
 );
 
 const sortPayments = (payments = []) => {
@@ -108,7 +108,7 @@ const profileController = {
         .single();
 
       if (error) throw error;
-      res.status(200).json({ message: 'Cập nhật hồ sơ thành công!', user: data });
+      res.status(200).json({ message: 'Profile updated successfully!', user: data });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -142,7 +142,7 @@ const profileController = {
         .single();
 
       if (error) throw error;
-      res.status(201).json({ message: 'Thêm địa chỉ thành công!', address: data });
+      res.status(201).json({ message: 'Address added successfully!', address: data });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -161,7 +161,7 @@ const profileController = {
         .single();
 
       if (error) throw error;
-      res.status(200).json({ message: 'Đã cập nhật địa chỉ', address: data });
+      res.status(200).json({ message: 'Address updated successfully', address: data });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -173,7 +173,7 @@ const profileController = {
     try {
       const { error } = await supabase.from('Address').delete().eq('addressID', addressId);
       if (error) throw error;
-      res.status(200).json({ message: 'Đã xóa địa chỉ.' });
+      res.status(200).json({ message: 'Address deleted successfully.' });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -211,7 +211,7 @@ const profileController = {
 
       if (error) throw error;
       res.status(201).json({
-        message: 'Thêm phương thức thanh toán thành công!',
+        message: 'Payment method added successfully!',
         payment: { ...data, status },
       });
     } catch (error) {
@@ -234,7 +234,7 @@ const profileController = {
 
       if (error) throw error;
       res.status(200).json({
-        message: 'Cập nhật phương thức thanh toán thành công',
+        message: 'Payment method updated successfully',
         payment: { ...data, status },
       });
     } catch (error) {
@@ -248,7 +248,7 @@ const profileController = {
     try {
       const { error } = await supabase.from('Payment').delete().eq('paymentID', paymentId);
       if (error) throw error;
-      res.status(200).json({ message: 'Đã xóa phương thức thanh toán.' });
+      res.status(200).json({ message: 'Payment method deleted successfully.' });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

@@ -46,7 +46,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewModel = viewModel()) {
-    val tabs = listOf("Tất cả", "Chờ thanh toán", "Đang xử lý", "Đang giao", "Hoàn tất", "Đã hủy")
+    val tabs = listOf("All", "Pending payment", "Processing", "Shipping", "Completed", "Canceled")
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
     val format = NumberFormat.getCurrencyInstance(Locale("vi", "VN"))
@@ -60,11 +60,11 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
 
     val statusQuery = when (pagerState.currentPage) {
         0 -> null
-        1 -> "Chờ thanh toán"
-        2 -> "Đang xử lý"
-        3 -> "Đang giao"
-        4 -> "Hoàn tất"
-        5 -> "Đã hủy"
+        1 -> "Pending payment"
+        2 -> "Processing"
+        3 -> "Shipping"
+        4 -> "Completed"
+        5 -> "Canceled"
         else -> null
     }
 
@@ -72,7 +72,7 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
     BackHandler(onBack = handleBack)
 
     Column(modifier = Modifier.fillMaxSize()) {
-        MainTopAppBar("Lịch sử đơn hàng", navController, onBack = handleBack)
+        MainTopAppBar("Order History", navController, onBack = handleBack)
 
         ScrollableTabRow(selectedTabIndex = pagerState.currentPage) {
             tabs.forEachIndexed { index, title ->
@@ -91,7 +91,7 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
                 }
             } else if (orderViewModel.orders.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("Chưa có đơn hàng nào", color = Color.Gray)
+                    Text("No orders yet", color = Color.Gray)
                 }
             } else {
                 LazyColumn(
@@ -111,26 +111,26 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    Text("Đơn hàng #${order.orderId}", style = MaterialTheme.typography.titleMedium)
+                                    Text("Order #${order.orderId}", style = MaterialTheme.typography.titleMedium)
                                     Text(
                                         order.status ?: "",
                                         color = when (order.status) {
-                                            "Hoàn tất" -> Color(0xFF2E7D32)
-                                            "Đã hủy" -> Color.Red
+                                            "Completed" -> Color(0xFF2E7D32)
+                                            "Canceled" -> Color.Red
                                             else -> MaterialTheme.colorScheme.primary
                                         }
                                     )
                                 }
                                 if (order.orderDate != null) {
                                     Text(
-                                        "Ngày: ${order.orderDate}",
+                                        "Date: ${order.orderDate}",
                                         color = Color.Gray,
                                         style = MaterialTheme.typography.bodySmall
                                     )
                                 }
                                 val orderTotal = (order.finalAmount ?: order.totalAmount ?: 0.0) * 100000
                                 Text(
-                                    "Tổng: ${format.format(orderTotal)}",
+                                    "Total: ${format.format(orderTotal)}",
                                     color = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.padding(top = 4.dp)
                                 )
@@ -153,7 +153,7 @@ fun OrderDetailScreen(navController: NavController, orderId: Int, orderViewModel
     val detail = orderViewModel.orderDetail
 
     Column(modifier = Modifier.fillMaxSize()) {
-        MainTopAppBar("Chi tiết đơn hàng", navController)
+        MainTopAppBar("Order Details", navController)
 
         if (detail == null) {
             Box(
@@ -165,7 +165,7 @@ fun OrderDetailScreen(navController: NavController, orderId: Int, orderViewModel
                 CircularProgressIndicator()
             }
         } else {
-            val canConfirmTransfer = detail.status == "Chờ thanh toán" &&
+            val canConfirmTransfer = detail.status == "Pending payment" &&
                 (detail.payment?.isBankTransfer == true)
 
             Column(
@@ -173,34 +173,34 @@ fun OrderDetailScreen(navController: NavController, orderId: Int, orderViewModel
                     .padding(16.dp)
                     .weight(1f)
             ) {
-                Text("Đơn hàng #${detail.orderId}", style = MaterialTheme.typography.titleLarge)
-                Text("Trạng thái: ${detail.status}", color = MaterialTheme.colorScheme.primary)
+                Text("Order #${detail.orderId}", style = MaterialTheme.typography.titleLarge)
+                Text("Status: ${detail.status}", color = MaterialTheme.colorScheme.primary)
                 Spacer(modifier = Modifier.height(8.dp))
 
                 detail.address?.let {
-                    Text("Giao đến: ${it.receiverName} - ${it.addressString}", color = Color.Gray)
+                    Text("Ship to: ${it.receiverName} - ${it.addressString}", color = Color.Gray)
                 }
                 detail.payment?.let {
-                    Text("Thanh toán: ${it.paymentMethod}", color = Color.Gray)
+                    Text("Checkout: ${it.paymentMethod}", color = Color.Gray)
                 }
                 detail.shipment?.let {
-                    Text("Vận chuyển: ${it.shipmentMethod}", color = Color.Gray)
+                    Text("Shipping: ${it.shipmentMethod}", color = Color.Gray)
                 }
 
                 if (detail.payment?.isBankTransfer == true) {
                     Spacer(modifier = Modifier.height(12.dp))
                     Card(modifier = Modifier.fillMaxWidth()) {
                         Column(modifier = Modifier.padding(12.dp)) {
-                            Text("Hướng dẫn chuyển khoản", style = MaterialTheme.typography.titleMedium)
+                            Text("Bank Transfer Instructions", style = MaterialTheme.typography.titleMedium)
                             Spacer(modifier = Modifier.height(6.dp))
-                            Text("Ngân hàng: Vietcombank", style = MaterialTheme.typography.bodyMedium)
-                            Text("Số tài khoản: 0123456789", style = MaterialTheme.typography.bodyMedium)
-                            Text("Chủ tài khoản: MAD N8 BookStore", style = MaterialTheme.typography.bodyMedium)
+                            Text("Bank: Vietcombank", style = MaterialTheme.typography.bodyMedium)
+                            Text("Account number: 0123456789", style = MaterialTheme.typography.bodyMedium)
+                            Text("Account holder: MAD N8 BookStore", style = MaterialTheme.typography.bodyMedium)
                             Text(
-                                if (detail.status == "Chờ thanh toán") {
-                                    "Sau khi chuyển khoản, nhấn 'Xác nhận đã chuyển khoản' để đưa đơn sang Đang xử lý."
+                                if (detail.status == "Pending payment") {
+                                    "After transferring, tap 'Confirm Bank Transfer' to move the order to Processing."
                                 } else {
-                                    "Đơn hàng chuyển khoản này đang được xử lý."
+                                    "This bank-transfer order is being processed."
                                 },
                                 color = Color.Gray,
                                 style = MaterialTheme.typography.bodySmall,
@@ -213,10 +213,10 @@ fun OrderDetailScreen(navController: NavController, orderId: Int, orderViewModel
                 Spacer(modifier = Modifier.height(16.dp))
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(8.dp))
-                Text("Sản phẩm:", style = MaterialTheme.typography.titleMedium)
+                Text("Products:", style = MaterialTheme.typography.titleMedium)
 
                 if (detail.items.isNullOrEmpty()) {
-                    Text("Chưa có dữ liệu sản phẩm cho đơn hàng này", color = Color.Gray)
+                    Text("No product data is available for this order", color = Color.Gray)
                 } else {
                     detail.items.forEach { item ->
                         Row(
@@ -236,9 +236,9 @@ fun OrderDetailScreen(navController: NavController, orderId: Int, orderViewModel
                             }
 
                             Column(modifier = Modifier.weight(1f)) {
-                                Text(item.bookTitle ?: "Sách", maxLines = 1)
+                                Text(item.bookTitle ?: "Book", maxLines = 1)
                                 val itemPrice = (item.bookPrice ?: 0.0) * 100000
-                                Text("SL: ${item.quantity ?: 1} × ${format.format(itemPrice)}", color = Color.Gray)
+                                Text("Qty: ${item.quantity ?: 1} × ${format.format(itemPrice)}", color = Color.Gray)
                             }
                         }
                     }
@@ -249,15 +249,15 @@ fun OrderDetailScreen(navController: NavController, orderId: Int, orderViewModel
                 Spacer(modifier = Modifier.height(8.dp))
 
                 val rawTotal = (detail.totalAmount ?: 0.0) * 100000
-                Text("Tổng cộng: ${format.format(rawTotal)}")
+                Text("Total before discount: ${format.format(rawTotal)}")
 
                 detail.voucher?.let {
-                    Text("Giảm giá: ${it.description ?: it.code}", color = Color(0xFF2E7D32))
+                    Text("Discount: ${it.description ?: it.code}", color = Color(0xFF2E7D32))
                 }
 
                 val rawFinal = (detail.finalAmount ?: detail.totalAmount ?: 0.0) * 100000
                 Text(
-                    "Thanh toán: ${format.format(rawFinal)}",
+                    "Checkout: ${format.format(rawFinal)}",
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -269,7 +269,7 @@ fun OrderDetailScreen(navController: NavController, orderId: Int, orderViewModel
                         orderViewModel.repayOrder(orderId) { result ->
                             Toast.makeText(
                                 context,
-                                result?.message ?: "Đã xác nhận thanh toán",
+                                result?.message ?: "Payment confirmed",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -278,15 +278,15 @@ fun OrderDetailScreen(navController: NavController, orderId: Int, orderViewModel
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
                 ) {
-                    Text("Xác nhận đã chuyển khoản")
+                    Text("Confirm Bank Transfer")
                 }
             }
 
-            if (detail.status == "Chờ thanh toán" || detail.status == "Đang xử lý") {
+            if (detail.status == "Pending payment" || detail.status == "Processing") {
                 Button(
                     onClick = {
                         orderViewModel.cancelOrder(orderId) {
-                            Toast.makeText(context, "Đã hủy đơn hàng", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Order canceled", Toast.LENGTH_SHORT).show()
                             navController.popBackStack()
                         }
                     },
@@ -295,7 +295,7 @@ fun OrderDetailScreen(navController: NavController, orderId: Int, orderViewModel
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    Text("Hủy đơn hàng")
+                    Text("Cancel Order")
                 }
             } else {
                 Spacer(modifier = Modifier.height(16.dp))

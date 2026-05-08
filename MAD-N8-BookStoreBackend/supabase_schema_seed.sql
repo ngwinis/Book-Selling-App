@@ -208,12 +208,12 @@ insert into public."Publishers" ("publisherID", "publisherName") values
 (3, 'Bloomsbury');
 
 insert into public."Book" ("bookID", "title", "author", "price", "description", "language", "format", "pageCount", "variantLabel", "idGroup", "createdAt") values
-(1, 'Dac Nhan Tam', 'Dale Carnegie', 1.20, 'Cuon sach kinh dien ve giao tiep va ung xu.', 'Tieng Viet', 'Paperback', 320, 'Ban thuong', 100, now() - interval '1 day'),
-(2, 'Nha Gia Kim', 'Paulo Coelho', 1.05, 'Hanh trinh di tim kho bau va y nghia cuoc song.', 'Tieng Viet', 'Paperback', 240, 'Ban thuong', 101, now() - interval '2 days'),
-(3, 'Harry Potter va Hon da Phu thuy', 'J. K. Rowling', 1.50, 'Cau chuyen dau tien ve the gioi phu thuy Harry Potter.', 'Tieng Viet', 'Hardcover', 360, 'Bia cung', 102, now() - interval '3 days'),
-(4, 'Sapiens Luoc su loai nguoi', 'Yuval Noah Harari', 1.80, 'Tong quan lich su phat trien cua nhan loai.', 'Tieng Viet', 'Paperback', 520, 'Ban thuong', 103, now() - interval '4 days'),
-(5, 'Cha Giau Cha Ngheo', 'Robert Kiyosaki', 1.25, 'Bai hoc tai chinh ca nhan va tu duy dau tu.', 'Tieng Viet', 'Paperback', 336, 'Ban thuong', 104, now() - interval '5 days'),
-(6, 'Harry Potter va Phong Chua Bi Mat', 'J. K. Rowling', 1.55, 'Tap tiep theo trong loat truyen Harry Potter.', 'Tieng Viet', 'Hardcover', 380, 'Bia cung', 102, now() - interval '6 days');
+(1, 'Dac Nhan Tam', 'Dale Carnegie', 1.20, 'Cuon sach kinh dien ve giao tiep va ung xu.', 'English', 'Paperback', 320, 'Ban thuong', 100, now() - interval '1 day'),
+(2, 'Nha Gia Kim', 'Paulo Coelho', 1.05, 'Hanh trinh di tim kho bau va y nghia cuoc song.', 'English', 'Paperback', 240, 'Ban thuong', 101, now() - interval '2 days'),
+(3, 'Harry Potter va Hon da Phu thuy', 'J. K. Rowling', 1.50, 'Cau chuyen dau tien ve the gioi phu thuy Harry Potter.', 'English', 'Hardcover', 360, 'Hardcover', 102, now() - interval '3 days'),
+(4, 'Sapiens Luoc su loai nguoi', 'Yuval Noah Harari', 1.80, 'Tong quan lich su phat trien cua nhan loai.', 'English', 'Paperback', 520, 'Ban thuong', 103, now() - interval '4 days'),
+(5, 'Cha Giau Cha Ngheo', 'Robert Kiyosaki', 1.25, 'Bai hoc tai chinh ca nhan va tu duy dau tu.', 'English', 'Paperback', 336, 'Ban thuong', 104, now() - interval '5 days'),
+(6, 'Harry Potter and the Chamber of Secrets', 'J. K. Rowling', 1.55, 'The next book in the Harry Potter series.', 'English', 'Hardcover', 380, 'Hardcover', 102, now() - interval '6 days');
 
 insert into public."BookImages" ("idBook", "imageURL", "isPrimary") values
 (1, 'https://covers.openlibrary.org/b/isbn/0671027034-L.jpg', true),
@@ -236,16 +236,16 @@ insert into public."Address" ("idCustomer", "receiverName", "addressString") val
 (1, 'Demo User', 'Quan 1, TP HCM');
 
 insert into public."Payment" ("idCustomer", "paymentMethod", "status") values
-(1, 'Thanh toan khi nhan hang (COD)', 'Hoat dong'),
-(1, 'Chuyen khoan ngan hang', 'Hoat dong');
+(1, 'Cash on Delivery (COD)', 'Active'),
+(1, 'Chuyen khoan ngan hang', 'Active');
 
 insert into public."Shipment" ("shipmentMethod", "estimatedDate", "status") values
-('Giao hang tieu chuan', '3-5 ngay', 'Hoat dong'),
-('Giao hang nhanh', '1-2 ngay', 'Hoat dong');
+('Standard delivery', '3-5 days', 'Active'),
+('Express delivery', '1-2 days', 'Active');
 
 insert into public."Voucher" ("code", "description", "type", "discountValue", "minOrderValue", "expiryDate", "usageLimit") values
-('BOOK10', 'Giam 10 phan tram', 'PERCENT', 10, 1, now() + interval '90 days', 100),
-('FREESHIP', 'Giam phi van chuyen', 'FIXED', 0.2, 1, now() + interval '90 days', 100);
+('BOOK10', '10 percent discount', 'PERCENT', 10, 1, now() + interval '90 days', 100),
+('FREESHIP', 'Shipping fee discount', 'FIXED', 0.2, 1, now() + interval '90 days', 100);
 
 insert into public."Review" ("idBook", "idCustomer", "rating", "comment", "createdAt") values
 (1, 1, 5, 'Sach hay va de ap dung.', now() - interval '3 days'),

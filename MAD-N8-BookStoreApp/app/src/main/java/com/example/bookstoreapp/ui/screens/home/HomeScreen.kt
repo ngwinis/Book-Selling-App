@@ -54,7 +54,7 @@ fun HomeScreen(navController: NavController, bookViewModel: BookViewModel = view
             shape = RoundedCornerShape(8.dp)
         ) {
             Text(
-                "Tìm kiếm sản phẩm...",
+                "Search products...",
                 modifier = Modifier.padding(16.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -66,9 +66,9 @@ fun HomeScreen(navController: NavController, bookViewModel: BookViewModel = view
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("Danh mục", style = MaterialTheme.typography.titleLarge)
+            Text("Categories", style = MaterialTheme.typography.titleLarge)
             Text(
-                "Xem tất cả",
+                "View all",
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.clickable { navController.navigate(Screen.CategoryList.route) }
             )
@@ -91,7 +91,7 @@ fun HomeScreen(navController: NavController, bookViewModel: BookViewModel = view
 
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            "Dành riêng cho bạn",
+            "For You",
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -162,7 +162,7 @@ internal fun BookGridCard(book: Book, onClick: () -> Unit) {
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    "Đã bán ${book.soldCount ?: 0}",
+                    "Sold ${book.soldCount ?: 0}",
                     color = Color.Gray,
                     style = MaterialTheme.typography.bodySmall
                 )
@@ -170,7 +170,7 @@ internal fun BookGridCard(book: Book, onClick: () -> Unit) {
             Spacer(modifier = Modifier.height(8.dp))
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                "${"%,.0f".format(book.price)}đ",
+                "${"%,.0f".format(book.price)} VND",
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.bodyLarge
             )

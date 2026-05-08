@@ -10,17 +10,17 @@ const normalizeText = (value = '') =>
     .toString()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/g, 'd')
-    .replace(/Đ/g, 'D')
+    .replace(/\u0111/g, 'd')
+    .replace(/\u0110/g, 'D')
     .toLowerCase()
     .replace(/\s+/g, ' ')
     .trim();
 
 const SOLD_STATUS_KEYS = new Set([
-  normalizeText('Đang xử lý'),
-  normalizeText('Đang giao'),
-  normalizeText('Hoàn tất'),
-  normalizeText('Đã thanh toán'),
+  normalizeText('Processing'),
+  normalizeText('Shipping'),
+  normalizeText('Completed'),
+  normalizeText('Paid'),
 ]);
 
 const extractPrimaryImage = (book) => {
@@ -568,13 +568,13 @@ const rerankWithAI = async (targetBook, candidates) => {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
     const prompt = `
-Bạn là hệ thống gợi ý sách. Hãy xếp hạng danh sách ứng viên theo mức độ tương tự với sách mục tiêu.
-Trả về duy nhất JSON array các bookID theo thứ tự phù hợp nhất đến ít phù hợp hơn.
+You are a book recommendation system. Rank candidate books by similarity to the target book.
+Return only a JSON array of bookID values from most relevant to least relevant.
 
-Sách mục tiêu:
+Target book:
 ${JSON.stringify({ bookID: targetBook.bookID, title: targetBook.title, description: targetBook.description || '' })}
 
-Ứng viên:
+Candidates:
 ${JSON.stringify(candidates.map((book) => ({ bookID: book.bookID, title: book.title, description: book.description || '' })))}
 `;
 
@@ -595,7 +595,7 @@ ${JSON.stringify(candidates.map((book) => ({ bookID: book.bookID, title: book.ti
 };
 
 const resolveSimilarBooks = async (bookId, book) => {
-  let similarSource = 'Mới cập nhật';
+  let similarSource = 'Recently Updated';
   let candidates = [];
 
   if (book.idGroup) {
@@ -608,7 +608,7 @@ const resolveSimilarBooks = async (bookId, book) => {
 
     if (!error) {
       candidates = data || [];
-      if (candidates.length) similarSource = 'Cùng nhóm sách';
+      if (candidates.length) similarSource = 'Same Book Group';
     }
   }
 
@@ -649,7 +649,7 @@ const resolveSimilarBooks = async (bookId, book) => {
 
       if (!error) {
         candidates = dedupeBooks([...candidates, ...(data || [])]);
-        if (candidates.length) similarSource = 'Cùng tác giả/thể loại';
+        if (candidates.length) similarSource = 'Same Author or Category';
       }
     }
   }
@@ -669,7 +669,7 @@ const resolveSimilarBooks = async (bookId, book) => {
 
   const reranked = await rerankWithAI(book, candidates);
   if (reranked) {
-    similarSource = 'AI + dữ liệu cùng tác giả/thể loại';
+    similarSource = 'AI + same author/category data';
     candidates = reranked;
   }
 
@@ -748,7 +748,7 @@ const bookController = {
         .single();
 
       if (bookError || !book) {
-        return res.status(404).json({ message: 'Khong tim thay sach' });
+        return res.status(404).json({ message: 'Book was not found' });
       }
 
       const [reviewResult, metricsMap, similarResult] = await Promise.all([
@@ -788,7 +788,7 @@ const bookController = {
   searchBooks: async (req, res) => {
     const { q } = req.query;
     if (!q) {
-      return res.status(400).json({ message: 'Vui long nhap tu khoa q' });
+      return res.status(400).json({ message: 'Please enter the q keyword' });
     }
 
     try {

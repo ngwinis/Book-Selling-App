@@ -51,7 +51,7 @@ const reviewController = {
     const numericBookId = Number(bookId);
 
     if (!customerId) {
-      return res.status(401).json({ message: 'Vui long dang nhap de gui danh gia' });
+      return res.status(401).json({ message: 'Please log in to submit a review' });
     }
 
     try {
@@ -97,7 +97,7 @@ const reviewController = {
       const [decoratedReview] = await attachCustomerToReviews(review ? [review] : []);
 
       res.status(updated ? 200 : 201).json({
-        message: updated ? 'Da cap nhat danh gia thanh cong' : 'Da gui danh gia thanh cong',
+        message: updated ? 'Review updated successfully' : 'Review submitted successfully',
         updated,
         review: decoratedReview || null,
       });

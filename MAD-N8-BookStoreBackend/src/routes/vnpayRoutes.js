@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 const vnpayController = require('../controllers/vnpayController');
 
-// Route này nhận redirect từ VNPay (Browser)
+// Receives browser redirects from VNPay
 router.get('/vnpay-return', vnpayController.vnpayReturn);
 
-// Route này nhận thông báo ngầm từ VNPay (Server-to-Server)
+// Receives VNPay server-to-server notifications
 router.get('/vnpay-ipn', vnpayController.vnpayIpn);
 
-// Route yêu cầu link đăng ký lưu thẻ (Tokenization)
+// Requests a saved-card registration link
 router.post('/create-token-url', vnpayController.handleCreateTokenUrl);
 
 module.exports = router;

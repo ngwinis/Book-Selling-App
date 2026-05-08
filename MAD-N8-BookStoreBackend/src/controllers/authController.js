@@ -9,15 +9,15 @@ const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString()
 const authController = {
   register: async (req, res) => {
     const { email, password, confirmPassword } = req.body;
-    if (password !== confirmPassword) return res.status(400).json({ message: "Mật khẩu xác nhận không khớp" });
+    if (password !== confirmPassword) return res.status(400).json({ message: "Password confirmation does not match" });
 
     try {
       const { data: existingUser } = await supabase.from('Customer').select('customerID').eq('email', email).maybeSingle();
-      if (existingUser) return res.status(400).json({ message: "Email đã được sử dụng" });
+      if (existingUser) return res.status(400).json({ message: "Email is already in use" });
 
       const hashedPassword = await bcrypt.hash(password, 10);
       
-      // Khắc phục lỗi Sequence ID của Postgres bằng cách tự tạo ID tự tăng
+      // Avoid Postgres sequence mismatch by generating the next ID manually
       const { data: maxIdRecord } = await supabase.from('Customer')
         .select('customerID')
         .order('customerID', { ascending: false })
@@ -35,9 +35,9 @@ const authController = {
       const expiredAt = new Date(Date.now() + 5 * 60000); // 5 mins
       await supabase.from('OTP').insert([{ otpCode, idCustomer: newUser.customerID, expiredAt }]);
 
-      console.log(`[MÔ PHỎNG EMAIL TỚI ${email}] Mã OTP xác nhận đăng ký của bạn là: ${otpCode}`);
+      console.log(`[SIMULATED EMAIL TO ${email}] Your registration OTP is: ${otpCode}`);
 
-      res.status(201).json({ message: "Đăng ký thành công. Đã gửi OTP vào email." });
+      res.status(201).json({ message: "Registration successful. OTP has been sent to your email." });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -47,14 +47,14 @@ const authController = {
     const { email, password } = req.body;
     try {
       const { data: user } = await supabase.from('Customer').select('*').eq('email', email).maybeSingle();
-      if (!user) return res.status(400).json({ message: "Email hoặc mật khẩu không đúng" });
+      if (!user) return res.status(400).json({ message: "Email or password is incorrect" });
 
       const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) return res.status(400).json({ message: "Email hoặc mật khẩu không đúng" });
+      if (!isMatch) return res.status(400).json({ message: "Email or password is incorrect" });
 
       const token = jwt.sign({ customerID: user.customerID, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
       res.status(200).json({ 
-        message: "Đăng nhập thành công", 
+        message: "Login successful", 
         token, 
         user: { customerID: user.customerID, email: user.email, fullName: user.fullName } 
       });
@@ -67,15 +67,15 @@ const authController = {
     const { email } = req.body;
     try {
       const { data: user } = await supabase.from('Customer').select('customerID').eq('email', email).maybeSingle();
-      if (!user) return res.status(404).json({ message: "Không tìm thấy email này" });
+      if (!user) return res.status(404).json({ message: "Email was not found" });
 
       const otpCode = generateOTP();
       const expiredAt = new Date(Date.now() + 5 * 60000);
       await supabase.from('OTP').insert([{ otpCode, idCustomer: user.customerID, expiredAt }]);
 
-      console.log(`[MÔ PHỎNG EMAIL TỚI ${email}] Mã OTP khôi phục mật khẩu của bạn là: ${otpCode}`);
+      console.log(`[SIMULATED EMAIL TO ${email}] Your password reset OTP is: ${otpCode}`);
       
-      res.status(200).json({ message: "Mã OTP đã được gửi đến email của bạn" });
+      res.status(200).json({ message: "OTP has been sent to your email" });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -85,7 +85,7 @@ const authController = {
     const { email, otpCode } = req.body;
     try {
       const { data: user } = await supabase.from('Customer').select('customerID').eq('email', email).maybeSingle();
-      if (!user) return res.status(404).json({ message: "Email không tồn tại" });
+      if (!user) return res.status(404).json({ message: "Email does not exist" });
 
       const { data: otpRecords, error } = await supabase.from('OTP')
         .select('*')
@@ -93,16 +93,16 @@ const authController = {
         .order('expiredAt', { ascending: false })
         .limit(1);
 
-      if (error || !otpRecords || otpRecords.length === 0) return res.status(400).json({ message: "Không tìm thấy mã OTP" });
+      if (error || !otpRecords || otpRecords.length === 0) return res.status(400).json({ message: "OTP was not found" });
       
       const latestOtp = otpRecords[0];
-      if (latestOtp.otpCode !== otpCode) return res.status(400).json({ message: "Mã OTP không chính xác" });
-      if (new Date(latestOtp.expiredAt) < new Date()) return res.status(400).json({ message: "Mã OTP đã hết hạn" });
+      if (latestOtp.otpCode !== otpCode) return res.status(400).json({ message: "OTP is incorrect" });
+      if (new Date(latestOtp.expiredAt) < new Date()) return res.status(400).json({ message: "OTP has expired" });
 
-      // Trả về một mã token ngắn hạn để sử dụng cho lần đổi pass kế tiếp (Flow Quên mật khẩu)
+      // Return a short-lived token for the next password reset step
       const resetToken = jwt.sign({ customerID: user.customerID, email, isReset: true }, JWT_SECRET, { expiresIn: '15m' });
 
-      res.status(200).json({ message: "Xác thực OTP thành công", resetToken });
+      res.status(200).json({ message: "OTP verified successfully", resetToken });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -110,19 +110,19 @@ const authController = {
 
   changePassword: async (req, res) => {
     const { oldPassword, newPassword, confirmPassword, resetToken } = req.body;
-    if (newPassword !== confirmPassword) return res.status(400).json({ message: "Mật khẩu xác nhận không khớp" });
+    if (newPassword !== confirmPassword) return res.status(400).json({ message: "Password confirmation does not match" });
 
     try {
       let customerId;
       if (resetToken) {
-        // Luồng đổi pass từ Quên Mật Khẩu (Đã verify OTP trước đó)
+        // Password reset flow after OTP verification
         const decoded = jwt.verify(resetToken, JWT_SECRET);
-        if (!decoded.isReset) return res.status(400).json({ message: "Token không hợp lệ để đổi mật khẩu" });
+        if (!decoded.isReset) return res.status(400).json({ message: "Token is not valid for password reset" });
         customerId = decoded.customerID;
       } else {
-        // Luồng đổi pass khi đang đăng nhập (Trong trang cá nhân Profile)
+        // Password change flow while logged in from profile
         const authHeader = req.headers.authorization;
-        if (!authHeader) return res.status(401).json({ message: "Vui lòng đăng nhập để đổi mật khẩu" });
+        if (!authHeader) return res.status(401).json({ message: "Please log in to change your password" });
         
         const token = authHeader.split(' ')[1];
         const decoded = jwt.verify(token, JWT_SECRET);
@@ -130,13 +130,13 @@ const authController = {
 
         const { data: user } = await supabase.from('Customer').select('password').eq('customerID', customerId).single();
         const isMatch = await bcrypt.compare(oldPassword, user.password);
-        if (!isMatch) return res.status(400).json({ message: "Mật khẩu cũ không chính xác" });
+        if (!isMatch) return res.status(400).json({ message: "Old password is incorrect" });
       }
 
       const hashedPassword = await bcrypt.hash(newPassword, 10);
       await supabase.from('Customer').update({ password: hashedPassword }).eq('customerID', customerId);
 
-      res.status(200).json({ message: "Cập nhật mật khẩu thành công!" });
+      res.status(200).json({ message: "Password updated successfully!" });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

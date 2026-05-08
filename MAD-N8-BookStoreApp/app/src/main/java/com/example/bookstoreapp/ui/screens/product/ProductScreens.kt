@@ -60,7 +60,7 @@ fun ProductListScreen(
     navController: NavController,
     categoryId: Int? = null,
     authorId: Int? = null,
-    title: String = "Tất cả sản phẩm",
+    title: String = "All Products",
     bookViewModel: BookViewModel = viewModel()
 ) {
     LaunchedEffect(categoryId, authorId) {
@@ -125,22 +125,22 @@ fun ProductDetailScreen(
                     OutlinedButton(
                         onClick = {
                             cartViewModel.addToCart(bookId)
-                            Toast.makeText(context, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show()
                         },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("Thêm vào giỏ")
+                        Text("Add to Cart")
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
                         onClick = {
                             cartViewModel.addToCart(bookId)
-                            Toast.makeText(context, "Sản phẩm đã được thêm vào giỏ để thanh toán", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Product added to cart for checkout", Toast.LENGTH_SHORT).show()
                             navController.navigate(Screen.Cart.route)
                         },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("Mua ngay")
+                        Text("Buy Now")
                     }
                 }
             }
@@ -161,7 +161,7 @@ fun ProductDetailScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                MainTopAppBar("Chi tiết sách", navController)
+                MainTopAppBar("Book Details", navController)
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -170,12 +170,12 @@ fun ProductDetailScreen(
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            errorMessage ?: "Không tải được chi tiết sản phẩm",
+                            errorMessage ?: "Unable to load product details",
                             color = Color.Gray
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         Button(onClick = { bookViewModel.loadBookDetail(bookId) }) {
-                            Text("Tải lại")
+                            Text("Retry")
                         }
                     }
                 }
@@ -186,7 +186,7 @@ fun ProductDetailScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                MainTopAppBar("Chi tiết sách", navController)
+                MainTopAppBar("Book Details", navController)
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -225,42 +225,42 @@ fun ProductDetailScreen(
                         Text(detail.book.title, style = MaterialTheme.typography.headlineMedium)
                         if (!detail.book.author.isNullOrEmpty()) {
                             Text(
-                                "Tác giả: ${detail.book.author}",
+                                "Author: ${detail.book.author}",
                                 color = Color.Gray,
                                 style = MaterialTheme.typography.titleMedium,
                                 modifier = Modifier.padding(vertical = 4.dp)
                             )
                         }
                         Text(
-                            "${"%,.0f".format(detail.book.price)}đ",
+                            "${"%,.0f".format(detail.book.price)} VND",
                             color = MaterialTheme.colorScheme.primary,
                             style = MaterialTheme.typography.titleLarge
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                             ProductMetricChip(
-                                label = "Đánh giá",
+                                label = "Rating",
                                 value = "★ ${String.format("%.1f", detail.avgRating ?: 0.0)}"
                             )
                             ProductMetricChip(
-                                label = "Nhận xét",
+                                label = "Reviews",
                                 value = "${detail.totalReviews ?: 0}"
                             )
                             ProductMetricChip(
-                                label = "Đã bán",
+                                label = "Sold",
                                 value = "${detail.soldCount ?: detail.book.soldCount ?: 0}"
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         HorizontalDivider()
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text("Mô tả sản phẩm", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Text("Product Description", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                         AndroidView(
                             modifier = Modifier.padding(top = 8.dp),
                             factory = { androidContext ->
                                 TextView(androidContext).apply {
                                     text = HtmlCompat.fromHtml(
-                                        detail.book.description ?: "Chưa có mô tả.",
+                                        detail.book.description ?: "No description available.",
                                         HtmlCompat.FROM_HTML_MODE_COMPACT
                                     )
                                     textSize = 16f
@@ -274,9 +274,9 @@ fun ProductDetailScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("Đánh giá sản phẩm", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            Text("Product Reviews", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                             Text(
-                                "Xem tất cả >",
+                                "View all >",
                                 color = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.clickable { navController.navigate("review_list/$bookId") }
                             )
@@ -292,7 +292,7 @@ fun ProductDetailScreen(
                             )
                             Text("/5", color = Color.Gray, modifier = Modifier.padding(start = 4.dp))
                             Text(
-                                "(${detail.totalReviews ?: 0} đánh giá)",
+                                "(${detail.totalReviews ?: 0} reviews)",
                                 color = Color.Gray,
                                 modifier = Modifier.padding(start = 8.dp)
                             )
@@ -305,17 +305,17 @@ fun ProductDetailScreen(
                                 colors = CardDefaults.cardColors(containerColor = Color(0xFFF9F9F9))
                             ) {
                                 Column(modifier = Modifier.padding(12.dp)) {
-                                    Text(review.customer?.fullName ?: "Ẩn danh", fontWeight = FontWeight.Bold)
+                                    Text(review.customer?.fullName ?: "Anonymous", fontWeight = FontWeight.Bold)
                                     Text("★".repeat(review.rating.toInt()) + " ${review.comment}")
                                 }
                             }
                         }
 
                         Spacer(modifier = Modifier.height(24.dp))
-                        Text("Sản phẩm tương tự", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Text("Similar Products", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                         detail.similarSource?.let {
                             Text(
-                                "Nguồn gợi ý: $it",
+                                "Recommendation source: $it",
                                 color = Color.Gray,
                                 style = MaterialTheme.typography.bodySmall,
                                 modifier = Modifier.padding(top = 4.dp)
@@ -392,13 +392,13 @@ private fun SimilarBookCard(book: Book, onClick: () -> Unit) {
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    "Đã bán ${book.soldCount ?: 0}",
+                    "Sold ${book.soldCount ?: 0}",
                     color = Color.Gray,
                     style = MaterialTheme.typography.bodySmall
                 )
             }
             Text(
-                "${"%,.0f".format(book.price)}đ",
+                "${"%,.0f".format(book.price)} VND",
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(start = 8.dp, top = 4.dp, bottom = 8.dp)
             )

@@ -1,7 +1,7 @@
 const supabase = require('../config/supabase');
 
 const checkoutDataController = {
-  // Trả về danh sách voucher khả dụng
+  // Return available vouchers
   getVouchers: async (req, res) => {
     try {
       const currentDate = new Date().toISOString();
@@ -17,7 +17,7 @@ const checkoutDataController = {
     }
   },
 
-  // Trả về danh sách phương thức vận chuyển
+  // Return shipping methods
   getShipments: async (req, res) => {
     try {
       const { data, error } = await supabase.from('Shipment').select('*');
@@ -29,7 +29,7 @@ const checkoutDataController = {
     }
   },
 
-  // Kiểm tra tính hợp lệ voucher và trả về số tiền cuối cùng
+  // Validate voucher and return the final amount
   validateVoucher: async (req, res) => {
     const { voucherCode, totalAmount } = req.body;
     
@@ -39,15 +39,15 @@ const checkoutDataController = {
         .eq('code', voucherCode)
         .single();
         
-      if (error || !voucher) return res.status(404).json({ isValid: false, message: "Voucher không tồn tại" });
+      if (error || !voucher) return res.status(404).json({ isValid: false, message: "Voucher does not exist" });
       
-      if (voucher.usageLimit <= 0) return res.status(400).json({ isValid: false, message: "Voucher đã hết lượt sử dụng" });
-      if (new Date(voucher.expiryDate) < new Date()) return res.status(400).json({ isValid: false, message: "Voucher đã hết hạn" });
-      if (totalAmount < voucher.minOrderValue) return res.status(400).json({ isValid: false, message: `Đơn hàng chưa đạt giá trị tối thiểu ${voucher.minOrderValue}` });
+      if (voucher.usageLimit <= 0) return res.status(400).json({ isValid: false, message: "Voucher usage limit has been reached" });
+      if (new Date(voucher.expiryDate) < new Date()) return res.status(400).json({ isValid: false, message: "Voucher has expired" });
+      if (totalAmount < voucher.minOrderValue) return res.status(400).json({ isValid: false, message: `Order has not reached the minimum value ${voucher.minOrderValue}` });
       
-      // Tính toán discount
+      // Calculate discount
       let discount = 0;
-      if (voucher.type === 'PERCENT') { // Giả định type là 'PERCENT' hoặc 'FIXED'
+      if (voucher.type === 'PERCENT') { // Assume type is 'PERCENT' or 'FIXED'
         discount = (totalAmount * voucher.discountValue) / 100;
       } else {
         discount = voucher.discountValue; 

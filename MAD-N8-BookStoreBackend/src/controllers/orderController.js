@@ -1,17 +1,17 @@
 const supabase = require('../config/supabase');
 
-const PAYMENT_PENDING_STATUS = 'Chờ thanh toán';
-const PAYMENT_PROCESSING_STATUS = 'Đang xử lý';
-const PAYMENT_COMPLETED_STATUS = 'Hoàn tất';
-const PAYMENT_CANCELLED_STATUS = 'Đã hủy';
+const PAYMENT_PENDING_STATUS = 'Pending payment';
+const PAYMENT_PROCESSING_STATUS = 'Processing';
+const PAYMENT_COMPLETED_STATUS = 'Completed';
+const PAYMENT_CANCELLED_STATUS = 'Canceled';
 
 const normalizeText = (value = '') =>
   value
     .toString()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/g, 'd')
-    .replace(/Đ/g, 'D')
+    .replace(/\u0111/g, 'd')
+    .replace(/\u0110/g, 'D')
     .trim()
     .toUpperCase();
 
@@ -34,14 +34,14 @@ const resolveConfirmedPaymentStatus = () => PAYMENT_PROCESSING_STATUS;
 
 const buildCheckoutMessage = (payment) => {
   if (isCashOnDelivery(payment)) {
-    return 'Đặt hàng COD thành công';
+    return 'COD order placed successfully';
   }
 
   if (isBankTransfer(payment)) {
-    return 'Đơn hàng đã được tạo. Vui lòng chuyển khoản rồi xác nhận trong chi tiết đơn hàng';
+    return 'Order created. Please transfer the payment and confirm it in order details';
   }
 
-  return 'Đặt hàng thành công';
+  return 'Order placed successfully';
 };
 
 const mapOrderItems = (orderItems = []) =>
@@ -51,7 +51,7 @@ const mapOrderItems = (orderItems = []) =>
 
     return {
       bookId: item.Book?.bookID || item.idBook || null,
-      bookTitle: item.Book?.title || 'Sách',
+      bookTitle: item.Book?.title || 'Book',
       bookPrice: item.Book?.price || 0,
       quantity: item.quantity || 0,
       bookImage: primaryImage,
@@ -161,7 +161,7 @@ const buildOrderPayload = ({
 const ensureSupportedPayment = (payment, res) => {
   if (!isSupportedPaymentMethod(payment)) {
     res.status(400).json({
-      message: 'Phương thức thanh toán này chưa được hỗ trợ hoàn tất trong ứng dụng',
+      message: 'This payment method is not supported for in-app completion',
     });
     return false;
   }
@@ -189,13 +189,13 @@ const orderController = {
 
       if (paymentError) throw paymentError;
       if (!payment) {
-        return res.status(404).json({ message: 'Không tìm thấy phương thức thanh toán' });
+        return res.status(404).json({ message: 'Payment method was not found' });
       }
       if (!ensureSupportedPayment(payment, res)) return;
 
       const { cart, cartItems } = await checkoutSelectedCartItems({ customerId, selectedCartItemIds });
       if (!cart || cartItems.length === 0) {
-        return res.status(400).json({ message: 'Giỏ hàng trống hoặc chưa chọn sản phẩm để thanh toán' });
+        return res.status(400).json({ message: 'The cart is empty or no products were selected for checkout' });
       }
 
       const totalAmount = cartItems.reduce(
@@ -265,8 +265,8 @@ const orderController = {
 
       if (bookResult.error) throw bookResult.error;
       if (paymentResult.error) throw paymentResult.error;
-      if (!bookResult.data) return res.status(404).json({ message: 'Không tìm thấy sách' });
-      if (!paymentResult.data) return res.status(404).json({ message: 'Không tìm thấy phương thức thanh toán' });
+      if (!bookResult.data) return res.status(404).json({ message: 'Book was not found' });
+      if (!paymentResult.data) return res.status(404).json({ message: 'Payment method was not found' });
       if (!ensureSupportedPayment(paymentResult.data, res)) return;
 
       const totalAmount = Number(bookResult.data.price || 0) * Number(quantity || 0);
@@ -349,7 +349,7 @@ const orderController = {
         .single();
 
       if (error || !order) {
-        return res.status(404).json({ message: 'Không tìm thấy đơn hàng' });
+        return res.status(404).json({ message: 'Order was not found' });
       }
 
       res.status(200).json(buildOrderDetail(order));
@@ -369,11 +369,11 @@ const orderController = {
         .single();
 
       if (orderFetchError) throw orderFetchError;
-      if (!order) return res.status(404).json({ message: 'Đơn hàng không tồn tại' });
+      if (!order) return res.status(404).json({ message: 'Order does not exist' });
 
       if (order.status !== PAYMENT_PENDING_STATUS && order.status !== PAYMENT_PROCESSING_STATUS) {
         return res.status(400).json({
-          message: "Chỉ có thể hủy đơn hàng ở trạng thái 'Chờ thanh toán' hoặc 'Đang xử lý'",
+          message: "Orders can only be canceled in 'Pending payment' or 'Processing' status",
         });
       }
 
@@ -407,7 +407,7 @@ const orderController = {
         }
       }
 
-      res.status(200).json({ message: 'Đã hủy đơn hàng thành công', data });
+      res.status(200).json({ message: 'Order canceled successfully', data });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -424,21 +424,21 @@ const orderController = {
         .single();
 
       if (error) throw error;
-      if (!order) return res.status(404).json({ message: 'Không tìm thấy đơn hàng' });
+      if (!order) return res.status(404).json({ message: 'Order was not found' });
 
       if (isCashOnDelivery(order.Payment)) {
-        return res.status(400).json({ message: 'Đơn COD không cần xác nhận thanh toán' });
+        return res.status(400).json({ message: 'COD orders do not require payment confirmation' });
       }
 
       if (!isBankTransfer(order.Payment)) {
         return res.status(400).json({
-          message: 'Phương thức thanh toán của đơn hàng này chưa được hỗ trợ xác nhận trong ứng dụng',
+          message: 'This order payment method does not support in-app confirmation',
         });
       }
 
       if (order.status !== PAYMENT_PENDING_STATUS) {
         return res.status(400).json({
-          message: 'Chỉ đơn hàng ở trạng thái Chờ thanh toán mới có thể xác nhận chuyển khoản',
+          message: 'Only pending-payment orders can confirm bank transfer',
         });
       }
 
@@ -450,7 +450,7 @@ const orderController = {
         .eq('orderID', order.orderID);
 
       res.status(200).json({
-        message: 'Đã xác nhận chuyển khoản. Đơn hàng đang được xử lý',
+        message: 'Bank transfer confirmed. The order is now processing',
         orderId: order.orderID,
         orderID: order.orderID,
         status: nextStatus,

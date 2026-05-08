@@ -44,7 +44,7 @@ class CartViewModel : ViewModel() {
 
     fun addToCart(bookId: Int, quantity: Int = 1, onDone: (Boolean, String?) -> Unit = { _, _ -> }) {
         if (TokenManager.customerId <= 0) {
-            onDone(false, "Vui lòng đăng nhập để thêm vào giỏ hàng")
+            onDone(false, "Please log in to add items to the cart")
             return
         }
         viewModelScope.launch {
@@ -52,12 +52,12 @@ class CartViewModel : ViewModel() {
                 val response = api.addToCart(AddToCartRequest(TokenManager.customerId, bookId, quantity))
                 if (response.isSuccessful) {
                     loadCart()
-                    onDone(true, response.body()?.message ?: "Đã thêm vào giỏ hàng")
+                    onDone(true, response.body()?.message ?: "Added to cart")
                 } else {
-                    onDone(false, "Không thể thêm sản phẩm vào giỏ hàng")
+                    onDone(false, "Unable to add product to cart")
                 }
             } catch (e: Exception) {
-                onDone(false, e.message ?: "Không thể thêm sản phẩm vào giỏ hàng")
+                onDone(false, e.message ?: "Unable to add product to cart")
             }
         }
     }

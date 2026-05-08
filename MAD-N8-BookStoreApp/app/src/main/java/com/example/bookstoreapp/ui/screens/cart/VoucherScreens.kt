@@ -22,18 +22,18 @@ fun VoucherSelectionScreen(navController: NavController, totalAmount: Double, or
     LaunchedEffect(Unit) { orderViewModel.loadVouchers() }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        MainTopAppBar("Áp dụng mã giảm giá", navController)
+        MainTopAppBar("Apply Discount Code", navController)
 
         Column(modifier = Modifier.padding(16.dp)) {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                OutlinedTextField(value = inputCode, onValueChange = { inputCode = it }, placeholder = { Text("Nhập mã Voucher") }, modifier = Modifier.weight(1f))
+                OutlinedTextField(value = inputCode, onValueChange = { inputCode = it }, placeholder = { Text("Enter voucher code") }, modifier = Modifier.weight(1f))
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(onClick = {
                     orderViewModel.validateVoucher(inputCode, totalAmount) // Validate
-                }) { Text("Áp dụng") }
+                }) { Text("Apply") }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Voucher khả dụng", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text("Available Vouchers", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(16.dp))
 
             LazyColumn(modifier = Modifier.weight(1f)) {
@@ -48,10 +48,10 @@ fun VoucherSelectionScreen(navController: NavController, totalAmount: Double, or
                         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(voucher.description ?: voucher.code, fontWeight = FontWeight.Bold, color = Color(0xFF2E7D32))
-                                Text("Mã: ${voucher.code}", color = Color.Gray, style = MaterialTheme.typography.bodySmall)
+                                Text("Code: ${voucher.code}", color = Color.Gray, style = MaterialTheme.typography.bodySmall)
                                 if (voucher.minOrderValue != null) {
                                     val formattedMin = java.text.NumberFormat.getCurrencyInstance(java.util.Locale("vi", "VN")).format(voucher.minOrderValue * 100000)
-                                    Text("Đơn tối thiểu: $formattedMin", color = Color.Gray, style = MaterialTheme.typography.bodySmall)
+                                    Text("Minimum Order: $formattedMin", color = Color.Gray, style = MaterialTheme.typography.bodySmall)
                                 }
                                 if (voucher.expiryDate != null) Text("HSD: ${voucher.expiryDate}", color = Color.Gray, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp))
                             }

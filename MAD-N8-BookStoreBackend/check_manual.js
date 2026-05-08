@@ -35,10 +35,10 @@ async function runTest() {
         vnp_BankCode: 'NCB',
         vnp_Command: 'token_create',
         vnp_CreateDate: createDate,
-        vnp_CurrCode: 'VND', // THIẾU CÁI NÀY CÓ THỂ GÂY "NOT ENOUGH PARAMS"
+        vnp_CurrCode: 'VND', // This is required to avoid NOT ENOUGH PARAMS
         vnp_IpAddr: ipAddr,
         vnp_Locale: 'vn',
-        vnp_OrderInfo: `LuuTheBookstore${customerId}`,
+        vnp_OrderInfo: `SaveCardBookstore${customerId}`,
         vnp_OrderType: 'other',
         vnp_ReturnUrl: process.env.VNP_RETURNURL,
         vnp_TmnCode: tmnCode,

@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
-        // Khôi phục phiên đăng nhập từ SQLite
+        // Restore login session from SQLite
         val dbHelper = DatabaseHelper(this)
         val token = dbHelper.getToken()
         val customerId = dbHelper.getCustomerId()

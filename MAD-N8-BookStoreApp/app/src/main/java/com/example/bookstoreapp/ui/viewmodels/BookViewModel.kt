@@ -109,10 +109,10 @@ class BookViewModel : ViewModel() {
                         allReviews = detail.top3Reviews ?: emptyList()
                     }
                 } else {
-                    errorMessage = "Khong tai duoc chi tiet san pham."
+                    errorMessage = "Unable to load product details."
                 }
             } catch (e: Exception) {
-                errorMessage = e.message ?: "Loi ket noi khi tai chi tiet san pham."
+                errorMessage = e.message ?: "Connection error while loading product details."
             }
             isLoading = false
         }
@@ -128,10 +128,10 @@ class BookViewModel : ViewModel() {
                     val reviews = response.body() ?: emptyList()
                     allReviews = if (reviews.isNotEmpty()) reviews else (bookDetail?.top3Reviews ?: emptyList())
                 } else {
-                    reviewErrorMessage = "Khong tai duoc danh gia tu he thong."
+                    reviewErrorMessage = "Unable to load reviews from the system."
                 }
             } catch (e: Exception) {
-                reviewErrorMessage = e.message ?: "Khong tai duoc danh gia tu he thong."
+                reviewErrorMessage = e.message ?: "Unable to load reviews from the system."
             }
             isReviewLoading = false
         }
@@ -140,7 +140,7 @@ class BookViewModel : ViewModel() {
     fun postReview(bookId: Int, rating: Int, comment: String, onDone: (Boolean) -> Unit) {
         viewModelScope.launch {
             if (!canWriteReview) {
-                reviewErrorMessage = "Vui long dang nhap de viet danh gia."
+                reviewErrorMessage = "Please log in to write a review."
                 onDone(false)
                 return@launch
             }
@@ -162,12 +162,12 @@ class BookViewModel : ViewModel() {
                         JSONObject(response.errorBody()?.string().orEmpty()).optString("message")
                     }.getOrNull().orEmpty()
                     reviewErrorMessage = serverMessage.ifBlank {
-                        "Khong the gui danh gia. Hay dang nhap lai va thu lai."
+                        "Unable to submit review. Please log in again and try again."
                     }
                     onDone(false)
                 }
             } catch (e: Exception) {
-                reviewErrorMessage = e.message ?: "Khong the gui danh gia."
+                reviewErrorMessage = e.message ?: "Unable to submit review."
                 onDone(false)
             }
             isReviewLoading = false

@@ -20,7 +20,7 @@ fun ShipmentSelectionScreen(navController: NavController, orderViewModel: OrderV
     LaunchedEffect(Unit) { orderViewModel.loadShipments() }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        MainTopAppBar("Chọn đơn vị vận chuyển", navController)
+        MainTopAppBar("Select Shipping Method", navController)
 
         Column(modifier = Modifier.padding(16.dp)) {
             if (orderViewModel.shipments.isEmpty()) {
@@ -36,7 +36,7 @@ fun ShipmentSelectionScreen(navController: NavController, orderViewModel: OrderV
                             Spacer(modifier = Modifier.width(16.dp))
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(shipment.shipmentMethod, fontWeight = FontWeight.Bold)
-                                if (shipment.estimatedDate != null) Text("Dự kiến: ${shipment.estimatedDate}", color = Color.Gray, style = MaterialTheme.typography.bodySmall)
+                                if (shipment.estimatedDate != null) Text("Estimated: ${shipment.estimatedDate}", color = Color.Gray, style = MaterialTheme.typography.bodySmall)
                             }
                             RadioButton(selected = orderViewModel.selectedShipment?.shipmentId == shipment.shipmentId, onClick = {
                                 orderViewModel.selectedShipment = shipment

@@ -74,22 +74,22 @@ fun SearchScreen(navController: NavController, bookViewModel: BookViewModel = vi
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        MainTopAppBar("Tìm kiếm", navController)
+        MainTopAppBar("Search", navController)
 
         Column(modifier = Modifier.padding(16.dp)) {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 OutlinedTextField(
                     value = query,
                     onValueChange = { bookViewModel.updateSearchQuery(it) },
-                    placeholder = { Text("Tìm sách, tác giả hoặc thể loại") },
+                    placeholder = { Text("Search books, authors, or categories") },
                     modifier = Modifier.weight(1f),
                     singleLine = true
                 )
                 IconButton(onClick = { showVoiceDialog = true }) {
-                    Icon(Icons.Filled.Mic, contentDescription = "Tìm bằng giọng nói", tint = MaterialTheme.colorScheme.primary)
+                    Icon(Icons.Filled.Mic, contentDescription = "Voice Search", tint = MaterialTheme.colorScheme.primary)
                 }
                 IconButton(onClick = { navController.navigate("image_search") }) {
-                    Icon(Icons.Filled.CameraAlt, contentDescription = "Tìm bằng hình ảnh", tint = MaterialTheme.colorScheme.primary)
+                    Icon(Icons.Filled.CameraAlt, contentDescription = "Image Search", tint = MaterialTheme.colorScheme.primary)
                 }
             }
         }
@@ -107,7 +107,7 @@ fun SearchScreen(navController: NavController, bookViewModel: BookViewModel = vi
             }
 
             hasSearched && bookViewModel.searchResults.isEmpty() && bookViewModel.searchAuthorMatches.isEmpty() -> {
-                SearchEmptyState("Không tìm thấy kết quả phù hợp")
+                SearchEmptyState("No matching results found")
             }
 
             hasSearched || bookViewModel.recognizedText != null -> {
@@ -129,17 +129,17 @@ fun SearchScreen(navController: NavController, bookViewModel: BookViewModel = vi
                             ) {
                                 Column {
                                     Text(
-                                        "Tác giả phù hợp",
+                                        "Matching Author",
                                         style = MaterialTheme.typography.titleMedium,
                                         fontWeight = FontWeight.Bold
                                     )
                                     Text(
-                                        "${bookViewModel.searchAuthorMatches.size} kết quả",
+                                        "${bookViewModel.searchAuthorMatches.size} results",
                                         color = Color.Gray,
                                         style = MaterialTheme.typography.bodySmall
                                     )
                                 }
-                                Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "Xem tác giả")
+                                Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "View Author")
                             }
                         }
                     }
@@ -161,7 +161,7 @@ fun SearchScreen(navController: NavController, bookViewModel: BookViewModel = vi
             }
 
             else -> {
-                SearchEmptyState("Nhập từ khóa để bắt đầu tìm kiếm")
+                SearchEmptyState("Enter a keyword to start searching")
             }
         }
     }
@@ -170,10 +170,10 @@ fun SearchScreen(navController: NavController, bookViewModel: BookViewModel = vi
 @Composable
 fun AuthorListScreen(navController: NavController, bookViewModel: BookViewModel = viewModel()) {
     Column(modifier = Modifier.fillMaxSize()) {
-        MainTopAppBar("Tác giả tìm kiếm", navController)
+        MainTopAppBar("Search Authors", navController)
 
         if (bookViewModel.searchAuthorMatches.isEmpty()) {
-            SearchEmptyState("Không có tác giả phù hợp")
+            SearchEmptyState("No matching authors")
         } else {
             LazyColumn(
                 contentPadding = PaddingValues(16.dp),
@@ -199,7 +199,7 @@ fun AuthorListScreen(navController: NavController, bookViewModel: BookViewModel 
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    author.fullName ?: "Không rõ",
+                                    author.fullName ?: "Unknown",
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -231,7 +231,7 @@ fun AuthorBooksScreen(navController: NavController, authorId: Int, bookViewModel
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        MainTopAppBar(author?.fullName ?: "Tác giả", navController)
+        MainTopAppBar(author?.fullName ?: "Author", navController)
 
         if (author != null) {
             Card(
@@ -264,7 +264,7 @@ fun AuthorBooksScreen(navController: NavController, authorId: Int, bookViewModel
                 CircularProgressIndicator()
             }
         } else if (bookViewModel.bookList.isEmpty()) {
-            SearchEmptyState("Tác giả này chưa có sách hiển thị")
+            SearchEmptyState("This author has no visible books")
         } else {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),

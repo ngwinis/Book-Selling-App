@@ -100,7 +100,7 @@ fun ProfileContent(navController: NavController, onLogout: () -> Unit) {
                 .background(MaterialTheme.colorScheme.primary)
         ) {
             Text(
-                "Tài khoản",
+                "Account",
                 modifier = Modifier.align(Alignment.Center),
                 color = Color.White,
                 fontSize = 20.sp,
@@ -120,27 +120,27 @@ fun ProfileContent(navController: NavController, onLogout: () -> Unit) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Đơn hàng của tôi", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text("My Orders", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                     Icon(Icons.Filled.ChevronRight, contentDescription = null, tint = Color.Gray)
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    OrderStateItem(Icons.Outlined.CreditCard, "Chờ thanh toán")
-                    OrderStateItem(Icons.Outlined.Inventory2, "Đang xử lý")
-                    OrderStateItem(Icons.Outlined.LocalShipping, "Đang giao hàng")
-                    OrderStateItem(Icons.Outlined.CheckCircleOutline, "Hoàn tất")
+                    OrderStateItem(Icons.Outlined.CreditCard, "Pending payment")
+                    OrderStateItem(Icons.Outlined.Inventory2, "Processing")
+                    OrderStateItem(Icons.Outlined.LocalShipping, "Shipping")
+                    OrderStateItem(Icons.Outlined.CheckCircleOutline, "Completed")
                 }
             }
         }
 
         Spacer(modifier = Modifier.height(8.dp).fillMaxWidth().background(Color(0xFFF3F3F3)))
-        ProfileMenuItem(Icons.Outlined.PersonOutline, "Hồ sơ cá nhân") { navController.navigate(Screen.EditProfile.route) }
+        ProfileMenuItem(Icons.Outlined.PersonOutline, "Profile") { navController.navigate(Screen.EditProfile.route) }
         HorizontalDivider(color = Color(0xFFF3F3F3), thickness = 1.dp)
-        ProfileMenuItem(Icons.Outlined.LocationOn, "Quản lý địa chỉ") { navController.navigate(Screen.AddressMap.route) }
+        ProfileMenuItem(Icons.Outlined.LocationOn, "Manage Addresses") { navController.navigate(Screen.AddressMap.route) }
         HorizontalDivider(color = Color(0xFFF3F3F3), thickness = 1.dp)
-        ProfileMenuItem(Icons.Outlined.Payment, "Phương thức thanh toán") { navController.navigate(Screen.PaymentMethod.route) }
+        ProfileMenuItem(Icons.Outlined.Payment, "Payment Method") { navController.navigate(Screen.PaymentMethod.route) }
         HorizontalDivider(color = Color(0xFFF3F3F3), thickness = 1.dp)
-        ProfileMenuItem(Icons.Outlined.Lock, "Đổi mật khẩu") { navController.navigate(Screen.ChangePassword.route) }
+        ProfileMenuItem(Icons.Outlined.Lock, "Change Password") { navController.navigate(Screen.ChangePassword.route) }
 
         Spacer(modifier = Modifier.height(32.dp))
         Button(
@@ -151,7 +151,7 @@ fun ProfileContent(navController: NavController, onLogout: () -> Unit) {
                 .height(50.dp),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
         ) {
-            Text("Đăng xuất", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            Text("Log Out", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
         }
         Spacer(modifier = Modifier.height(32.dp))
     }
@@ -187,8 +187,8 @@ fun ProfileMenuItem(icon: ImageVector, title: String, onClick: () -> Unit) {
             icon,
             contentDescription = title,
             tint = when (title) {
-                "Hồ sơ cá nhân", "Đổi mật khẩu" -> Color(0xFFE91E63)
-                "Quản lý địa chỉ" -> Color(0xFF4CAF50)
+                "Profile", "Change Password" -> Color(0xFFE91E63)
+                "Manage Addresses" -> Color(0xFF4CAF50)
                 else -> Color(0xFF2196F3)
             }
         )
@@ -211,35 +211,35 @@ fun EditProfileScreen(navController: NavController, profileViewModel: ProfileVie
 
     Column(modifier = Modifier.fillMaxSize().background(Color.White)) {
         TopAppBar(
-            title = { Text("Cập nhật thông tin", color = Color.White) },
+            title = { Text("Update Information", color = Color.White) },
             navigationIcon = {
                 IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(Icons.Filled.ArrowBack, contentDescription = "Trở về", tint = Color.White)
+                    Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary)
         )
 
         Column(modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState())) {
-            Text("Họ và tên", fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 4.dp))
-            OutlinedTextField(value = name, onValueChange = { name = it }, placeholder = { Text("Nhập họ và tên") }, modifier = Modifier.fillMaxWidth())
+            Text("Full Name", fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 4.dp))
+            OutlinedTextField(value = name, onValueChange = { name = it }, placeholder = { Text("Enter full name") }, modifier = Modifier.fillMaxWidth())
 
             Spacer(modifier = Modifier.height(16.dp))
             Text("Email", fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 4.dp))
             OutlinedTextField(value = email, onValueChange = {}, placeholder = { Text("Email") }, modifier = Modifier.fillMaxWidth(), enabled = false)
 
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Số điện thoại", fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 4.dp))
+            Text("Phone Number", fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 4.dp))
             OutlinedTextField(value = phone, onValueChange = { phone = it }, modifier = Modifier.fillMaxWidth())
 
             Spacer(modifier = Modifier.height(32.dp))
             Button(onClick = {
                 profileViewModel.updateProfile(name, phone) {
-                    Toast.makeText(context, "Đã cập nhật!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Updated!", Toast.LENGTH_SHORT).show()
                     navController.popBackStack()
                 }
             }, modifier = Modifier.fillMaxWidth().height(50.dp)) {
-                Text("Lưu thay đổi", color = Color.White)
+                Text("Save Changes", color = Color.White)
             }
             Spacer(modifier = Modifier.height(32.dp))
         }
@@ -251,7 +251,7 @@ fun AddressScreen(navController: NavController, profileViewModel: ProfileViewMod
     LaunchedEffect(Unit) { profileViewModel.loadAddresses() }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        MainTopAppBar("Quản lý địa chỉ", navController)
+        MainTopAppBar("Manage Addresses", navController)
         Column(modifier = Modifier.padding(16.dp).weight(1f)) {
             profileViewModel.addresses.forEach { addr ->
                 Card(modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp), onClick = { navController.popBackStack() }) {
@@ -261,14 +261,14 @@ fun AddressScreen(navController: NavController, profileViewModel: ProfileViewMod
                             Text(addr.addressString, color = Color.Gray)
                         }
                         IconButton(onClick = { profileViewModel.deleteAddress(addr.addressId ?: 0) }) {
-                            Icon(Icons.Outlined.Delete, contentDescription = "Xóa", tint = MaterialTheme.colorScheme.error)
+                            Icon(Icons.Outlined.Delete, contentDescription = "Delete", tint = MaterialTheme.colorScheme.error)
                         }
                     }
                 }
             }
         }
         Button(onClick = { navController.navigate(Screen.AddAddress.route) }, modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-            Text("+ Thêm địa chỉ mới")
+            Text("+ Add New Address")
         }
     }
 }
@@ -278,17 +278,17 @@ fun PaymentMethodScreen(navController: NavController, profileViewModel: ProfileV
     LaunchedEffect(Unit) { profileViewModel.loadPayments() }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        MainTopAppBar("Phương thức thanh toán", navController)
+        MainTopAppBar("Payment Method", navController)
         Column(modifier = Modifier.padding(16.dp).weight(1f)) {
             Text(
-                "COD và chuyển khoản ngân hàng đang hoạt động. Các phương thức khác hiện chỉ hiển thị tham khảo.",
+                "COD and bank transfer are active. Other methods are shown for reference only.",
                 color = Color.Gray,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
             if (profileViewModel.payments.isEmpty()) {
                 Box(modifier = Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
-                    Text("Chưa có phương thức nào", color = Color.Gray)
+                    Text("No payment methods yet", color = Color.Gray)
                 }
             }
             profileViewModel.payments.forEach { payment ->
@@ -315,14 +315,14 @@ fun PaymentMethodScreen(navController: NavController, profileViewModel: ProfileV
                             )
                         }
                         IconButton(onClick = { profileViewModel.deletePayment(payment.paymentId ?: 0) }) {
-                            Icon(Icons.Outlined.Delete, contentDescription = "Xóa", tint = MaterialTheme.colorScheme.error)
+                            Icon(Icons.Outlined.Delete, contentDescription = "Delete", tint = MaterialTheme.colorScheme.error)
                         }
                     }
                 }
             }
         }
         Button(onClick = { navController.navigate(Screen.AddPaymentMethod.route) }, modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-            Text("+ Thêm phương thức mới")
+            Text("+ Add New Payment Method")
         }
     }
 }
@@ -337,22 +337,22 @@ fun ChangePasswordScreen(navController: NavController, authViewModel: AuthViewMo
     LaunchedEffect(authViewModel.passwordChanged) {
         if (authViewModel.passwordChanged) {
             authViewModel.passwordChanged = false
-            Toast.makeText(context, "Đổi mật khẩu thành công!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Password changed successfully!", Toast.LENGTH_SHORT).show()
             navController.popBackStack()
         }
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        MainTopAppBar("Đổi mật khẩu", navController)
+        MainTopAppBar("Change Password", navController)
         Column(modifier = Modifier.padding(16.dp)) {
-            OutlinedTextField(value = oldPass, onValueChange = { oldPass = it }, label = { Text("Mật khẩu cũ") }, modifier = Modifier.fillMaxWidth(), visualTransformation = PasswordVisualTransformation())
+            OutlinedTextField(value = oldPass, onValueChange = { oldPass = it }, label = { Text("Old Password") }, modifier = Modifier.fillMaxWidth(), visualTransformation = PasswordVisualTransformation())
             Spacer(modifier = Modifier.height(12.dp))
-            OutlinedTextField(value = newPass, onValueChange = { newPass = it }, label = { Text("Mật khẩu mới") }, modifier = Modifier.fillMaxWidth(), visualTransformation = PasswordVisualTransformation())
+            OutlinedTextField(value = newPass, onValueChange = { newPass = it }, label = { Text("New Password") }, modifier = Modifier.fillMaxWidth(), visualTransformation = PasswordVisualTransformation())
             Spacer(modifier = Modifier.height(12.dp))
-            OutlinedTextField(value = confirmPass, onValueChange = { confirmPass = it }, label = { Text("Xác nhận mật khẩu") }, modifier = Modifier.fillMaxWidth(), visualTransformation = PasswordVisualTransformation())
+            OutlinedTextField(value = confirmPass, onValueChange = { confirmPass = it }, label = { Text("Confirm Password") }, modifier = Modifier.fillMaxWidth(), visualTransformation = PasswordVisualTransformation())
             Spacer(modifier = Modifier.height(24.dp))
             Button(onClick = { authViewModel.changePassword(oldPass, newPass, confirmPass) }, modifier = Modifier.fillMaxWidth(), enabled = !authViewModel.isLoading) {
-                Text("Cập nhật mật khẩu")
+                Text("Update Password")
             }
         }
     }
@@ -369,28 +369,28 @@ fun AddAddressScreen(navController: NavController, profileViewModel: ProfileView
     val context = LocalContext.current
 
     Column(modifier = Modifier.fillMaxSize()) {
-        MainTopAppBar("Thêm địa chỉ giao hàng", navController)
+        MainTopAppBar("Add Shipping Address", navController)
         Column(modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState())) {
-            OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Họ và tên") }, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Full Name") }, modifier = Modifier.fillMaxWidth())
             Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(value = phone, onValueChange = { phone = it }, label = { Text("Số điện thoại") }, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = phone, onValueChange = { phone = it }, label = { Text("Phone Number") }, modifier = Modifier.fillMaxWidth())
             Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(value = city, onValueChange = { city = it }, label = { Text("Tỉnh / Thành phố") }, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = city, onValueChange = { city = it }, label = { Text("Province / City") }, modifier = Modifier.fillMaxWidth())
             Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(value = district, onValueChange = { district = it }, label = { Text("Quận / Huyện") }, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = district, onValueChange = { district = it }, label = { Text("District") }, modifier = Modifier.fillMaxWidth())
             Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(value = ward, onValueChange = { ward = it }, label = { Text("Phường / Xã") }, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = ward, onValueChange = { ward = it }, label = { Text("Ward") }, modifier = Modifier.fillMaxWidth())
             Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(value = detail, onValueChange = { detail = it }, label = { Text("Chi tiết (Số nhà, đường...)") }, modifier = Modifier.fillMaxWidth(), minLines = 3)
+            OutlinedTextField(value = detail, onValueChange = { detail = it }, label = { Text("Details (house number, street...)") }, modifier = Modifier.fillMaxWidth(), minLines = 3)
             Spacer(modifier = Modifier.height(24.dp))
             Button(onClick = {
-                val addressStr = "$detail, $ward, $district, $city | SĐT: $phone"
+                val addressStr = "$detail, $ward, $district, $city | Phone: $phone"
                 profileViewModel.createAddress(name, addressStr) {
-                    Toast.makeText(context, "Đã lưu địa chỉ!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Address saved!", Toast.LENGTH_SHORT).show()
                     navController.popBackStack()
                 }
             }, modifier = Modifier.fillMaxWidth()) {
-                Text("Lưu địa chỉ")
+                Text("Save Address")
             }
         }
     }
@@ -399,25 +399,25 @@ fun AddAddressScreen(navController: NavController, profileViewModel: ProfileView
 @Composable
 fun AddPaymentMethodScreen(navController: NavController, profileViewModel: ProfileViewModel = viewModel()) {
     val paymentOptions = listOf(
-        "Thanh toán khi nhận hàng (COD)" to "Đơn sẽ chuyển sang Đang xử lý ngay sau khi đặt hàng.",
-        "Chuyển khoản ngân hàng" to "Đơn sẽ ở Chờ thanh toán cho đến khi bạn xác nhận đã chuyển khoản.",
-        "Ví Momo" to "Phương thức này hiện chưa được hỗ trợ hoàn tất trong app.",
-        "ZaloPay" to "Phương thức này hiện chưa được hỗ trợ hoàn tất trong app.",
-        "VNPay" to "Phương thức này hiện chưa được hỗ trợ hoàn tất trong app.",
-        "Thẻ ghi nợ / tín dụng" to "Phương thức này hiện chưa được hỗ trợ hoàn tất trong app."
+        "Cash on Delivery (COD)" to "The order will move to Processing after it is placed.",
+        "Bank transfer" to "The order will stay in Pending payment until you confirm the bank transfer.",
+        "Momo wallet" to "This payment method is not currently supported for app checkout.",
+        "ZaloPay" to "This payment method is not currently supported for app checkout.",
+        "VNPay" to "This payment method is not currently supported for app checkout.",
+        "Debit / credit card" to "This payment method is not currently supported for app checkout."
     )
     val supportedMethods = setOf(
-        "Thanh toán khi nhận hàng (COD)",
-        "Chuyển khoản ngân hàng"
+        "Cash on Delivery (COD)",
+        "Bank transfer"
     )
     var selectedMethod by remember { mutableStateOf(paymentOptions.first().first) }
     var customLabel by remember { mutableStateOf("") }
     val context = LocalContext.current
 
     Column(modifier = Modifier.fillMaxSize()) {
-        MainTopAppBar("Thêm phương thức thanh toán", navController)
+        MainTopAppBar("Add Payment Method", navController)
         Column(modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState())) {
-            Text("Chọn phương thức", fontWeight = FontWeight.Bold)
+            Text("Select Method", fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(12.dp))
             paymentOptions.forEach { (method, hint) ->
                 val isSupported = method in supportedMethods
@@ -432,7 +432,7 @@ fun AddPaymentMethodScreen(navController: NavController, profileViewModel: Profi
                             Text(method)
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                if (isSupported) "Hoạt động" else "Chưa hỗ trợ",
+                                if (isSupported) "Active" else "Unsupported",
                                 color = if (isSupported) Color(0xFF2E7D32) else MaterialTheme.colorScheme.error,
                                 style = MaterialTheme.typography.bodySmall
                             )
@@ -451,19 +451,19 @@ fun AddPaymentMethodScreen(navController: NavController, profileViewModel: Profi
             OutlinedTextField(
                 value = customLabel,
                 onValueChange = { customLabel = it },
-                label = { Text("Ghi chú hiển thị thêm") },
-                placeholder = { Text("Ví dụ: Vietcombank, Momo cá nhân...") },
+                label = { Text("Display Note") },
+                placeholder = { Text("Example: Vietcombank, personal Momo...") },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(24.dp))
             Button(onClick = {
                 val method = if (customLabel.isBlank()) selectedMethod else "$selectedMethod - $customLabel"
                 profileViewModel.createPayment(method) {
-                    Toast.makeText(context, "Đã lưu phương thức!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Payment method saved!", Toast.LENGTH_SHORT).show()
                     navController.popBackStack()
                 }
             }, modifier = Modifier.fillMaxWidth()) {
-                Text("Lưu phương thức")
+                Text("Save Method")
             }
         }
     }

@@ -36,10 +36,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     dbHelper.setLoginData(true, body.user.email, body.token, body.user.customerId)
                     loginSuccess = true
                 } else {
-                    errorMessage = "Email hoặc mật khẩu không đúng"
+                    errorMessage = "Email or password is incorrect"
                 }
             } catch (e: Exception) {
-                errorMessage = "Lỗi kết nối: ${e.message}"
+                errorMessage = "Connection error: ${e.message}"
             }
             isLoading = false
         }
@@ -53,10 +53,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 if (response.isSuccessful) {
                     registerSuccess = true
                 } else {
-                    errorMessage = "Đăng ký thất bại"
+                    errorMessage = "Registration failed"
                 }
             } catch (e: Exception) {
-                errorMessage = "Lỗi kết nối: ${e.message}"
+                errorMessage = "Connection error: ${e.message}"
             }
             isLoading = false
         }
@@ -68,9 +68,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 val response = api.forgotPassword(ForgotPasswordRequest(email))
                 if (response.isSuccessful) otpSent = true
-                else errorMessage = "Email không tồn tại"
+                else errorMessage = "Email does not exist"
             } catch (e: Exception) {
-                errorMessage = "Lỗi kết nối: ${e.message}"
+                errorMessage = "Connection error: ${e.message}"
             }
             isLoading = false
         }
@@ -84,10 +84,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 if (response.isSuccessful && response.body() != null) {
                     resetToken = response.body()!!.resetToken
                 } else {
-                    errorMessage = "Mã OTP không đúng"
+                    errorMessage = "OTP code is incorrect"
                 }
             } catch (e: Exception) {
-                errorMessage = "Lỗi kết nối: ${e.message}"
+                errorMessage = "Connection error: ${e.message}"
             }
             isLoading = false
         }
@@ -100,9 +100,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 val request = ChangePasswordRequest(oldPassword, newPassword, confirmPassword, resetTokenVal)
                 val response = api.changePassword(request)
                 if (response.isSuccessful) passwordChanged = true
-                else errorMessage = "Đổi mật khẩu thất bại"
+                else errorMessage = "Password change failed"
             } catch (e: Exception) {
-                errorMessage = "Lỗi kết nối: ${e.message}"
+                errorMessage = "Connection error: ${e.message}"
             }
             isLoading = false
         }

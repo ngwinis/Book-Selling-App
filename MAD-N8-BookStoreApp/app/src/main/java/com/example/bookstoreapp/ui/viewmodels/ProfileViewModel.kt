@@ -32,7 +32,7 @@ class ProfileViewModel : ViewModel() {
             try {
                 val response = api.updateProfile(UpdateProfileRequest(TokenManager.customerId, fullName, phoneNumber))
                 if (response.isSuccessful) { loadProfile(); onDone() }
-                else message = "Cập nhật thất bại"
+                else message = "Update failed"
             } catch (e: Exception) { message = e.message }
         }
     }

@@ -14,10 +14,10 @@ const vnpayRoutes = require('./routes/vnpayRoutes');
 
 const app = express();
 app.use(cors());
-app.use(express.json()); // Để server hiểu định dạng JSON
-app.use(express.urlencoded({ extended: true })); // Hỗ trợ đọc dữ liệu khi test bằng dạng Form-urlencoded
+app.use(express.json()); // Parse JSON request bodies
+app.use(express.urlencoded({ extended: true })); // Parse form-urlencoded request bodies for testing
 
-// Gắn các routes
+// Register routes
 app.use('/api/auth', authRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/api/ai', aiRoutes);
@@ -30,5 +30,5 @@ app.use('/api/vnpay', vnpayRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Cửa hàng sách Backend đang chạy tại http://localhost:${PORT}`);
+  console.log(`🚀 Bookstore backend is running at http://localhost:${PORT}`);
 });

@@ -90,7 +90,7 @@ fun ReviewListScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            MainTopAppBar("Tat ca danh gia", navController)
+            MainTopAppBar("All Reviews", navController)
 
             Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
                 Text(
@@ -103,12 +103,12 @@ fun ReviewListScreen(
                     Spacer(modifier = Modifier.height(6.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            "Dang nhap de viet danh gia.",
+                            "Log in to write a review.",
                             color = MaterialTheme.colorScheme.primary,
                             style = MaterialTheme.typography.bodySmall
                         )
                         TextButton(onClick = { navController.navigate(Screen.Login.route) }) {
-                            Text("Dang nhap")
+                            Text("Login")
                         }
                     }
                 }
@@ -144,7 +144,7 @@ fun ReviewListScreen(
                             .padding(24.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("Chua co danh gia nao cho san pham nay", color = Color.Gray)
+                        Text("No reviews for this product yet", color = Color.Gray)
                     }
                 }
 
@@ -161,7 +161,7 @@ fun ReviewListScreen(
                             key = { it.reviewId ?: it.createdAt ?: it.comment }
                         ) { review ->
                             ReviewCard(
-                                reviewerName = review.customer?.fullName ?: "Khach hang",
+                                reviewerName = review.customer?.fullName ?: "Customer",
                                 rating = review.rating.toInt(),
                                 comment = review.comment,
                                 createdAt = review.createdAt.orEmpty()
@@ -180,7 +180,7 @@ fun ReviewListScreen(
 
         AlertDialog(
             onDismissRequest = { showWriteDialog = false },
-            title = { Text("Viet danh gia") },
+            title = { Text("Write a Review") },
             text = {
                 Column {
                     Text("Chon so sao", fontWeight = FontWeight.Bold)
@@ -214,11 +214,11 @@ fun ReviewListScreen(
                         bookViewModel.postReview(bookId, rating, comment.trim()) { success ->
                             if (success) {
                                 showWriteDialog = false
-                                Toast.makeText(context, "Da gui danh gia", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Review submitted", Toast.LENGTH_SHORT).show()
                             } else {
                                 Toast.makeText(
                                     context,
-                                    bookViewModel.reviewErrorMessage ?: "Khong the gui danh gia",
+                                    bookViewModel.reviewErrorMessage ?: "Unable to submit review",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
@@ -233,13 +233,13 @@ fun ReviewListScreen(
                             strokeWidth = 2.dp
                         )
                     } else {
-                        Text("Gui danh gia")
+                        Text("Submit Review")
                     }
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showWriteDialog = false }) {
-                    Text("Huy")
+                    Text("Cancel")
                 }
             },
             shape = RoundedCornerShape(28.dp)

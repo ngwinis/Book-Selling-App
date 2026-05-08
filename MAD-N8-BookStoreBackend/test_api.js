@@ -5,7 +5,7 @@ async function testApi() {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ userMessage: "Xin chào" })
+            body: JSON.stringify({ userMessage: "Hello" })
         });
         const data = await response.json();
         console.log("Response:", data);

@@ -63,9 +63,9 @@ fun ImageSearchScreen(navController: NavController, bookViewModel: BookViewModel
     } else {
         Box(modifier = Modifier.fillMaxSize().background(Color.Black), contentAlignment = Alignment.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("Cần quyền Camera để tìm kiếm bằng hình ảnh", color = Color.White)
+                Text("Camera permission is required for image search", color = Color.White)
                 Button(onClick = { cameraPermissionState.launchPermissionRequest() }) {
-                    Text("Cấp quyền")
+                    Text("Grant Permission")
                 }
             }
         }
@@ -135,7 +135,7 @@ fun CameraInterface(navController: NavController, bookViewModel: BookViewModel) 
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = { navController.popBackStack() }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Trở về", tint = Color.White)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
             }
             IconButton(onClick = { flashEnabled = !flashEnabled }) {
                 Icon(
@@ -153,7 +153,7 @@ fun CameraInterface(navController: NavController, bookViewModel: BookViewModel) 
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = { galleryLauncher.launch("image/*") }) {
-                Icon(Icons.Default.PhotoLibrary, contentDescription = "Thư viện", tint = Color.White, modifier = Modifier.size(32.dp))
+                Icon(Icons.Default.PhotoLibrary, contentDescription = "Gallery", tint = Color.White, modifier = Modifier.size(32.dp))
             }
 
             Surface(
@@ -183,7 +183,7 @@ fun CameraInterface(navController: NavController, bookViewModel: BookViewModel) 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     CircularProgressIndicator(color = Color.White)
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text("Đang nhận diện bìa sách...", color = Color.White)
+                    Text("Recognizing book cover...", color = Color.White)
                 }
             }
         }

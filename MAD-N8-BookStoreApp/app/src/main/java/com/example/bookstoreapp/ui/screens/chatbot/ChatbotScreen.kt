@@ -54,7 +54,7 @@ data class Message(val text: String, val isUser: Boolean)
 fun ChatbotScreen(navController: NavController) {
     val messages = remember {
         mutableStateListOf(
-            Message("Xin chao! Toi co the giup gi cho ban hom nay?", isUser = false)
+            Message("Hello! How can I help you today?", isUser = false)
         )
     }
     var inputText by remember { mutableStateOf("") }
@@ -168,9 +168,9 @@ fun ChatbotScreen(navController: NavController) {
                             try {
                                 val response = RetrofitClient.api.chatbot(ChatbotRequest(userMessage))
                                 val reply = if (response.isSuccessful) {
-                                    response.body()?.reply ?: response.body()?.message ?: "Khong co phan hoi"
+                                    response.body()?.reply ?: response.body()?.message ?: "No response"
                                 } else {
-                                    "Loi: Khong the ket noi chatbot"
+                                    "Error: Unable to connect to the chatbot"
                                 }
                                 messages.add(Message(reply, false))
                             } catch (e: Exception) {
