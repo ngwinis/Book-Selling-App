@@ -151,3 +151,4 @@ Run `adb reverse tcp:3000 tcp:3000` again whenever the phone is reconnected or A
 - Login is required for cart, checkout, profile, orders, and writing reviews.
 - Registration creates an OTP in the backend and prints the OTP in the backend terminal. It does not send a real email.
 - This project is a classroom simulation, so some payment and AI flows are simplified for demonstration.
+# Book-Selling-App
