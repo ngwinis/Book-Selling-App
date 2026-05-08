@@ -1,0 +1,24 @@
+# Secrets
+.env
+*.env
+!.env.example
+MAD-N8-BookStoreBackend/.env
+MAD-N8-BookStoreApp/local.properties
+
+# Node
+MAD-N8-BookStoreBackend/node_modules/
+MAD-N8-BookStoreBackend/uploads/
+
+# Android / Gradle
+MAD-N8-BookStoreApp/.gradle/
+MAD-N8-BookStoreApp/.kotlin/
+MAD-N8-BookStoreApp/build/
+MAD-N8-BookStoreApp/app/build/
+MAD-N8-BookStoreApp/.idea/
+MAD-N8-BookStoreApp/*.iml
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

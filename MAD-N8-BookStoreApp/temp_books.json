@@ -1,0 +1,322 @@
+﻿{
+    "book":  {
+                 "bookID":  615,
+                 "sku":  "BK000615",
+                 "title":  "Cây Cam Ngọt Của Tôi",
+                 "variantLabel":  "Bìa mềm",
+                 "description":  "Nội dung chi tiết của cuốn sách đang được cập nhật...",
+                 "publicationYear":  2021,
+                 "language":  "Tiếng Việt",
+                 "weightGram":  331,
+                 "lengthCm":  20.5,
+                 "widthCm":  13.5,
+                 "thicknessCm":  3,
+                 "pageCount":  244,
+                 "format":  "Bìa mềm",
+                 "price":  273000,
+                 "createdAt":  "2026-03-28T04:59:48+00:00",
+                 "updateAt":  null,
+                 "idGroup":  1,
+                 "BookImages":  [
+                                    {
+                                        "imageURL":  "https://salt.tikicdn.com/cache/w1200/ts/product/11/a3/60/4d20c8cc5715141fcce1fbb14af05076.jpg",
+                                        "isPrimary":  true
+                                    },
+                                    {
+                                        "imageURL":  "https://salt.tikicdn.com/cache/w1200/ts/product/01/a9/70/4410891ea490bde5a81e96453a73ab2a.jpg",
+                                        "isPrimary":  false
+                                    },
+                                    {
+                                        "imageURL":  "https://salt.tikicdn.com/cache/w1200/ts/product/c0/89/3d/941742ae981c731d8a968f7ac2fc6230.jpg",
+                                        "isPrimary":  false
+                                    },
+                                    {
+                                        "imageURL":  "https://salt.tikicdn.com/cache/w1200/ts/product/89/5a/c7/8fcc67f06dd35f0f01d36a7bb4173034.jpg",
+                                        "isPrimary":  false
+                                    },
+                                    {
+                                        "imageURL":  "https://salt.tikicdn.com/cache/w1200/ts/product/f9/c0/ca/cffa6bb3f8c46a2a2ceb42b07d6ebc53.jpg",
+                                        "isPrimary":  false
+                                    },
+                                    {
+                                        "imageURL":  "https://salt.tikicdn.com/cache/w1200/ts/product/15/e0/74/9a08852acf107b0bb9d989e9acf7581d.jpg",
+                                        "isPrimary":  false
+                                    },
+                                    {
+                                        "imageURL":  "https://salt.tikicdn.com/cache/w1200/ts/product/3c/72/35/a6961acf9a0ae315a61e6c8db97c537e.jpg",
+                                        "isPrimary":  false
+                                    },
+                                    {
+                                        "imageURL":  "https://salt.tikicdn.com/cache/w1200/ts/product/bb/f1/dd/3594f9ed9535ab1ea26772788951ec4c.jpg",
+                                        "isPrimary":  false
+                                    }
+                                ]
+             },
+    "avgRating":  4.511111111111111,
+    "totalReviews":  90,
+    "top3Reviews":  [
+                        {
+                            "rating":  5,
+                            "comment":  "Đó là một câu chuyện buồn.\n\nHành trình của cậu nhóc Zeze khiến tôi tự thấy mình trong gương. Ai rồi cũng sẽ lớn lên, và chúng ta phải lựa chọn giữa việc trao yêu thương hay là roi vọt cho người khác. Xin hãy yêu nhau và thương nhau như cách ông Bồ, chị Glo dành cho Zeze, hãy quan tâm tới bố và mẹ của các bạn trong ngày giáng sinh.\n\nVà một bất ngờ, các tác phẩm từ Brazil vẫn mang một niềm tin và sự đối thoại với Thượng đế nhân lành.\n\nĐây là một cuốn sách đáng đọc.",
+                            "Customer":  {
+                                             "fullName":  "Phan Gia Thành"
+                                         }
+                        },
+                        {
+                            "rating":  5,
+                            "comment":  "Một cuốn sách rất đáng đọc về tình yêu thương và sự mất mát mà chắc chắn mình sẽ gợi ý cho mọi người (dù biết rằng nó đã rất hot rồi), để cùng cười trước những trò nghịch ngợm tinh quái, trí tưởng tượng tuyệt vời và những ước mơ rất trẻ con của Zezé, cùng xót xa khi em bị đánh đập, cùng đau đớn khi những người bạn mà em yêu nhất lần lượt ra đi, và cùng tiếc nuối khi nhận ra rằng một đứa trẻ chưa đầy 6 tuổi như em đã biết quá nhiều, đến mức sự hồn nhiên, mơ mộng trẻ con của em sẽ không bao giờ quay trở lại.\n\nMình có thể hiểu tại sao cuốn sách này lại hot đến vậy, lối viết rất nhẹ nhàng, trong sáng và dễ hiểu, quá đủ để tiếp cận độc giả ở mọi lứa tuổi. Nhưng cảm xúc mà nó đem lại thì mạnh mẽ vô cùng.\n\nCuối cùng thì cảm ơn Tiki và Nhã Nam (cùng chiến dịch Dọn kho - lý do cuối cùng khiến mình hạ quyết tâm rước ẻm về nhà =))) đã đem đến cho mình một cuốn sách tuyệt vời. Đáng đồng tiền bát gạo.",
+                            "Customer":  {
+                                             "fullName":  "Huỳnh Minh Nhi"
+                                         }
+                        },
+                        {
+                            "rating":  5,
+                            "comment":  "Đóng gói sách của Tiki dạo này rất tệ. Mình mở hộp ra mà sốc luôn, chỉ độc 3 quyển sách trong cái hộp móp méo và 1 lớp giấy vụn ở bên trên, khi lấy đống giấy vụn ra thì vụn giấy phủ đầy cả bìa sách. Sách không được cho vào túi chống sốc và cũng không có thứ gì bảo vệ các góc sách cả. Kết quả là sách bị nhăn và quăn góc. Nhưng mình vẫn cho 5 sao với hy vọng tiki hãy cải thiện hơn ở những đơn hàng sau. \n\nVề nội dung cuốn sách thì không còn gì để bàn cãi nữa. Với lượt bán ra cực khủng và nhiều review có cánh dành cho cuốn sách này. Ban đầu mình hơi khó hiểu tại sao cuốn sách này lại viral như thế cho đến khi mình cầm nó trên tay, và mình đã khóc ở những trang sách cuối cùng. Một cây cam ngọt nhưng không hề ngọt. Dạo này mấy tựa sách lừa mấy con mọt quá =)))",
+                            "Customer":  {
+                                             "fullName":  "Vũ Ngọc Hòa"
+                                         }
+                        }
+                    ],
+    "similarBooks":  [
+                         {
+                             "bookID":  1222,
+                             "sku":  "BK001222",
+                             "title":  "Hành Tinh Của Một Kẻ Nghĩ Nhiều",
+                             "variantLabel":  "Bìa mềm",
+                             "description":  "Nội dung chi tiết của cuốn sách đang được cập nhật...",
+                             "publicationYear":  2022,
+                             "language":  "Tiếng Việt",
+                             "weightGram":  246,
+                             "lengthCm":  20.5,
+                             "widthCm":  13.5,
+                             "thicknessCm":  3,
+                             "pageCount":  184,
+                             "format":  "Bìa mềm",
+                             "price":  252999.99999999997,
+                             "createdAt":  "2026-03-28T04:59:48+00:00",
+                             "updateAt":  null,
+                             "idGroup":  1,
+                             "primaryImage":  "https://salt.tikicdn.com/cache/w1200/ts/product/e3/00/f0/23758a731d028df38e23202865a90257.jpg"
+                         },
+                         {
+                             "bookID":  613,
+                             "sku":  "BK000613",
+                             "title":  "Những Tù Nhân Của Địa Lý",
+                             "variantLabel":  "Bìa mềm",
+                             "description":  "Nội dung chi tiết của cuốn sách đang được cập nhật...",
+                             "publicationYear":  2020,
+                             "language":  "Tiếng Việt",
+                             "weightGram":  495,
+                             "lengthCm":  20.5,
+                             "widthCm":  13.5,
+                             "thicknessCm":  2,
+                             "pageCount":  430,
+                             "format":  "Bìa mềm",
+                             "price":  532000,
+                             "createdAt":  "2026-03-28T04:59:48+00:00",
+                             "updateAt":  null,
+                             "idGroup":  1,
+                             "primaryImage":  "https://salt.tikicdn.com/cache/w1200/ts/product/fd/49/29/f70fb82439e7e5b490e4b844970e54bf.png"
+                         },
+                         {
+                             "bookID":  447,
+                             "sku":  "BK000447",
+                             "title":  "Nhà Giả Kim (Tái Bản 2020)",
+                             "variantLabel":  "Bìa mềm",
+                             "description":  "Nội dung chi tiết của cuốn sách đang được cập nhật...",
+                             "publicationYear":  2022,
+                             "language":  "Tiếng Việt",
+                             "weightGram":  381,
+                             "lengthCm":  20.5,
+                             "widthCm":  13.5,
+                             "thicknessCm":  2,
+                             "pageCount":  228,
+                             "format":  "Bìa mềm",
+                             "price":  200000,
+                             "createdAt":  "2026-03-28T04:59:48+00:00",
+                             "updateAt":  null,
+                             "idGroup":  1,
+                             "primaryImage":  "https://salt.tikicdn.com/cache/w1200/ts/product/24/a5/fb/8e1d20c391906ad2ffd2581be6f057d1.jpg"
+                         },
+                         {
+                             "bookID":  1003,
+                             "sku":  "BK001003",
+                             "title":  "Một Thoáng Ta Rực Rỡ Ở Nhân Gian",
+                             "variantLabel":  "Bìa mềm",
+                             "description":  "Nội dung chi tiết của cuốn sách đang được cập nhật...",
+                             "publicationYear":  2020,
+                             "language":  "Tiếng Việt",
+                             "weightGram":  223,
+                             "lengthCm":  20.5,
+                             "widthCm":  13.5,
+                             "thicknessCm":  3,
+                             "pageCount":  304,
+                             "format":  "Bìa mềm",
+                             "price":  342000,
+                             "createdAt":  "2026-03-28T04:59:48+00:00",
+                             "updateAt":  null,
+                             "idGroup":  1,
+                             "primaryImage":  "https://salt.tikicdn.com/cache/w1200/ts/product/bc/e4/62/c90d693131214d091e22652d8722c779.jpg"
+                         },
+                         {
+                             "bookID":  116,
+                             "sku":  "BK000116",
+                             "title":  "Điều Kỳ Diệu Của Tiệm Tạp Hóa NAMIYA (Tái Bản)",
+                             "variantLabel":  "Bìa mềm",
+                             "description":  "Nội dung chi tiết của cuốn sách đang được cập nhật...",
+                             "publicationYear":  2021,
+                             "language":  "Tiếng Việt",
+                             "weightGram":  208,
+                             "lengthCm":  20.5,
+                             "widthCm":  13.5,
+                             "thicknessCm":  2,
+                             "pageCount":  358,
+                             "format":  "Bìa mềm",
+                             "price":  266000,
+                             "createdAt":  "2026-03-28T04:59:48+00:00",
+                             "updateAt":  null,
+                             "idGroup":  1,
+                             "primaryImage":  "https://salt.tikicdn.com/cache/w1200/ts/product/d0/e5/cf/cdeabe1e07dc2fd2a2d99c4bd558f41f.jpg"
+                         },
+                         {
+                             "bookID":  1102,
+                             "sku":  "BK001102",
+                             "title":  "Thao Túng Tâm Lý",
+                             "variantLabel":  "Bìa mềm",
+                             "description":  "Nội dung chi tiết của cuốn sách đang được cập nhật...",
+                             "publicationYear":  2022,
+                             "language":  "Tiếng Việt",
+                             "weightGram":  407,
+                             "lengthCm":  20.5,
+                             "widthCm":  13.5,
+                             "thicknessCm":  3,
+                             "pageCount":  328,
+                             "format":  "Bìa mềm",
+                             "price":  434999.99999999994,
+                             "createdAt":  "2026-03-28T04:59:48+00:00",
+                             "updateAt":  null,
+                             "idGroup":  1,
+                             "primaryImage":  "https://salt.tikicdn.com/cache/w1200/ts/product/ab/a4/f2/6965f2da83cc2861ab2f3c207f5d7d36.png"
+                         },
+                         {
+                             "bookID":  901,
+                             "sku":  "BK000901",
+                             "title":  "Thư Viện Nửa Đêm",
+                             "variantLabel":  "Bìa mềm",
+                             "description":  "Nội dung chi tiết của cuốn sách đang được cập nhật...",
+                             "publicationYear":  2020,
+                             "language":  "Tiếng Việt",
+                             "weightGram":  335,
+                             "lengthCm":  20.5,
+                             "widthCm":  13.5,
+                             "thicknessCm":  2,
+                             "pageCount":  424,
+                             "format":  "Bìa mềm",
+                             "price":  380000,
+                             "createdAt":  "2026-03-28T04:59:48+00:00",
+                             "updateAt":  null,
+                             "idGroup":  1,
+                             "primaryImage":  "https://salt.tikicdn.com/cache/w1200/ts/product/a9/11/cd/8db57c8fd3685e41109da91542dae1d5.jpg"
+                         },
+                         {
+                             "bookID":  1290,
+                             "sku":  "BK001290",
+                             "title":  "Không Phải Sói Nhưng Cũng Đừng Là Cừu -Tặng kèm bookmark 2 mặt",
+                             "variantLabel":  "Bìa mềm",
+                             "description":  "Nội dung chi tiết của cuốn sách đang được cập nhật...",
+                             "publicationYear":  2020,
+                             "language":  "Tiếng Việt",
+                             "weightGram":  431,
+                             "lengthCm":  20.5,
+                             "widthCm":  13.5,
+                             "thicknessCm":  2,
+                             "pageCount":  296,
+                             "format":  "Bìa mềm",
+                             "price":  405000,
+                             "createdAt":  "2026-03-28T04:59:48+00:00",
+                             "updateAt":  null,
+                             "idGroup":  1,
+                             "primaryImage":  "https://salt.tikicdn.com/cache/w1200/ts/product/d0/82/85/50264fad2d3ec3cea4d6db17641b9a2d.jpg"
+                         },
+                         {
+                             "bookID":  1524,
+                             "sku":  "BK001524",
+                             "title":  "Càng Bình Tĩnh Càng Hạnh Phúc",
+                             "variantLabel":  "Bìa mềm",
+                             "description":  "Nội dung chi tiết của cuốn sách đang được cập nhật...",
+                             "publicationYear":  2021,
+                             "language":  "Tiếng Việt",
+                             "weightGram":  353,
+                             "lengthCm":  20.5,
+                             "widthCm":  13.5,
+                             "thicknessCm":  1,
+                             "pageCount":  352,
+                             "format":  "Bìa mềm",
+                             "price":  359000,
+                             "createdAt":  "2026-03-28T04:59:48+00:00",
+                             "updateAt":  null,
+                             "idGroup":  1,
+                             "primaryImage":  "https://salt.tikicdn.com/cache/w1200/ts/product/68/18/97/1d6eb87cce3edfa8f7dfd5e69fabc9b2.jpg"
+                         },
+                         {
+                             "bookID":  131,
+                             "sku":  "BK000131",
+                             "title":  "Yêu Những Điều Không Hoàn Hảo",
+                             "variantLabel":  "Bìa mềm",
+                             "description":  "Nội dung chi tiết của cuốn sách đang được cập nhật...",
+                             "publicationYear":  2020,
+                             "language":  "Tiếng Việt",
+                             "weightGram":  334,
+                             "lengthCm":  20.5,
+                             "widthCm":  13.5,
+                             "thicknessCm":  1,
+                             "pageCount":  300,
+                             "format":  "Bìa mềm",
+                             "price":  352000,
+                             "createdAt":  "2026-03-28T04:59:48+00:00",
+                             "updateAt":  null,
+                             "idGroup":  1,
+                             "primaryImage":  "https://salt.tikicdn.com/cache/w1200/ts/product/9f/9c/43/f55a4738581350f8a26bd8afee322ddc.jpg"
+                         },
+                         {
+                             "bookID":  350,
+                             "sku":  "BK000350",
+                             "title":  "Hiểu Về Trái Tim (Tái Bản)",
+                             "variantLabel":  "Bìa mềm",
+                             "description":  "Nội dung chi tiết của cuốn sách đang được cập nhật...",
+                             "publicationYear":  2022,
+                             "language":  "Tiếng Việt",
+                             "weightGram":  437,
+                             "lengthCm":  20.5,
+                             "widthCm":  13.5,
+                             "thicknessCm":  1,
+                             "pageCount":  480,
+                             "format":  "Bìa mềm",
+                             "price":  401999.99999999994,
+                             "createdAt":  "2026-03-28T04:59:48+00:00",
+                             "updateAt":  null,
+                             "idGroup":  1,
+                             "primaryImage":  "https://salt.tikicdn.com/cache/w1200/ts/product/42/6f/f5/06695222312a5e22c6829d3b9c097ccd.jpg"
+                         },
+                         {
+                             "bookID":  1740,
+                             "sku":  "BK001740",
+                             "title":  "Quyền Lực Của Địa Lý - The Power Of Geography",
+                             "variantLabel":  "Bìa mềm",
+                             "description":  "Nội dung chi tiết của cuốn sách đang được cập nhật...",
+                             "publicationYear":  2023,
+                             "language":  "Tiếng Việt",
+                             "weightGram":  200,
+                             "lengthCm":  20.5,
+                             "widthCm":  13.5,
+                             "thicknessCm":  1,
+                             "pageCount":  559,
+                             "format":  "Bìa mềm",
+                             "price":  932000,
+                             "createdAt":  "2026-03-28T04:59:48+00:00",
+                             "updateAt":  null,
+                             "idGroup":  1,
+                             "primaryImage":  null
+                         }
+                     ]
+}
